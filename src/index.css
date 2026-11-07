@@ -38,51 +38,38 @@
 
   --measure: 1120px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* The site is deliberately single-theme.
+     The course, lesson and quiz pages are written in Tailwind with light
+     surfaces, so a dark palette only flipped half the site and left navy text
+     on navy panels. Pinning light keeps every page consistent. */
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --navy:       #AEB6D8;
-    --navy-deep:  #11141F;
-    --paper:      #171B28;
-    --surface:    #1E2333;
-    --accent:     #8FB0E8;
-    --accent-soft:#1D2740;
-    --text:       #E6E9F5;
-    --muted:      #AFB7D2;
-    --line:       #2C3245;
-    color-scheme: dark;
+/* These element-level rules MUST sit in @layer base.
+ *
+ * Tailwind v4 puts its utilities inside a cascade layer, and unlayered CSS
+ * beats layered CSS whatever the specificity. Left unlayered, `a { color:
+ * inherit }` silently overrode `text-white` on every Tailwind page — navy
+ * buttons rendered with invisible text. Keeping these in the base layer lets
+ * utilities win, as they should. */
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 17.5px;
+    line-height: 1.68;
+    -webkit-font-smoothing: antialiased;
   }
+
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  a { color: inherit; text-decoration: none; }
 }
-
-:root[data-theme="dark"] {
-  --navy:       #AEB6D8;
-  --navy-deep:  #11141F;
-  --paper:      #171B28;
-  --surface:    #1E2333;
-  --accent:     #8FB0E8;
-  --accent-soft:#1D2740;
-  --text:       #E6E9F5;
-  --muted:      #AFB7D2;
-  --line:       #2C3245;
-  color-scheme: dark;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--text);
-  font-family: var(--body);
-  font-size: 17.5px;
-  line-height: 1.68;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3 { font-family: var(--display); font-weight: 400; text-wrap: balance; margin: 0; }
-p { margin: 0; }
-a { color: inherit; text-decoration: none; }
 
 .wrap {
   max-width: var(--measure);
@@ -124,17 +111,6 @@ body::before {
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand img.mark { height: 30px; width: auto; }
 .brand img.word { height: 17px; width: auto; }
-.brand img.word-dark, .brand img.mark-dark { display: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .brand img.word-light,
-  :root:not([data-theme="light"]) .brand img.mark-light { display: none; }
-  :root:not([data-theme="light"]) .brand img.word-dark,
-  :root:not([data-theme="light"]) .brand img.mark-dark { display: inline; }
-}
-:root[data-theme="dark"] .brand img.word-light,
-:root[data-theme="dark"] .brand img.mark-light { display: none; }
-:root[data-theme="dark"] .brand img.word-dark,
-:root[data-theme="dark"] .brand img.mark-dark { display: inline; }
 
 .nav { display: flex; align-items: center; gap: 30px; }
 .nav a {

@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 
 import markNavy from '../../assets/mark-navy.png'
-import markWhite from '../../assets/mark-white.png'
 import wordNavy from '../../assets/wordmark-navy.png'
 import wordWhite from '../../assets/wordmark-white.png'
 
@@ -45,10 +44,8 @@ const footerColumns = [
 function Brand({ onClick }) {
   return (
     <Link to="/" className="brand" onClick={onClick} aria-label="Discoursia.ai home">
-      <img className="mark mark-light" src={markNavy} alt="" />
-      <img className="mark mark-dark" src={markWhite} alt="" />
-      <img className="word word-light" src={wordNavy} alt="Discoursia.ai" />
-      <img className="word word-dark" src={wordWhite} alt="Discoursia.ai" />
+      <img className="mark" src={markNavy} alt="" />
+      <img className="word" src={wordNavy} alt="Discoursia.ai" />
     </Link>
   )
 }
