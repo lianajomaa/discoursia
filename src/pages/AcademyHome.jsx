@@ -52,11 +52,20 @@ const audiences = [
   },
 ]
 
+// Outcome lines that rotate under the headline, one at a time.
+const outcomes = [
+  'Write a research question you can actually answer.',
+  'Turn a vague prompt into one that gets usable output.',
+  'Tell a strong source from a weak one, quickly.',
+  'Present your work so people remember it.',
+]
+
+// `short` is the two-word version used inside the hero frame.
 const steps = [
-  { n: '01', title: 'Watch', text: 'Short, focused video lessons.' },
-  { n: '02', title: 'Practice', text: 'Apply each concept through practical activities.' },
-  { n: '03', title: 'Check', text: 'Test your understanding with short quizzes.' },
-  { n: '04', title: 'Apply', text: 'Complete tasks based on realistic situations.' },
+  { n: '01', title: 'Watch', short: 'Short video lessons', text: 'Short, focused video lessons.' },
+  { n: '02', title: 'Practice', short: 'Hands-on activities', text: 'Apply each concept through practical activities.' },
+  { n: '03', title: 'Check', short: 'Short quizzes', text: 'Test your understanding with short quizzes.' },
+  { n: '04', title: 'Apply', short: 'Real scenarios', text: 'Complete tasks based on realistic situations.' },
 ]
 
 const included = [
@@ -80,26 +89,68 @@ function Home() {
       {/* ---------------- HERO ---------------- */}
       <section className="hero">
         <img className="watermark" src={markNavy} alt="" aria-hidden="true" />
-        <div className="wrap">
-          <div className="eyebrow rise d1">AI · Research · Digital communication</div>
+        <div className="wrap hero-split">
+          <div>
+            <div className="eyebrow rise d1">AI · Research · Digital communication</div>
 
-          <h1 className="rise d2">
-            Learn smarter. <em>Communicate better.</em> Work with AI.
-          </h1>
+            <h1 className="rise d2">
+              Learn smarter. <em>Communicate better.</em> Work with AI.
+            </h1>
 
-          <p className="lede rise d3">
-            Discoursia.ai helps university students and professionals build practical skills
-            in AI, prompt engineering, research and digital communication — so they can
-            study, work and communicate with greater confidence.
-          </p>
+            {/* the running lines — one outcome at a time */}
+            <ul className="rotator rise d3">
+              {outcomes.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            <div className="tick rise d3" aria-hidden="true">
+              {outcomes.map((line) => (
+                <i key={line} />
+              ))}
+            </div>
 
-          <div className="actions rise d4">
-            <Link className="btn btn--solid" to="/courses">
-              Explore courses<span className="arw">&rarr;</span>
-            </Link>
-            <Link className="btn btn--ghost" to="/about">
-              Explore our services
-            </Link>
+            <div className="actions rise d4">
+              <Link className="btn btn--solid" to="/courses">
+                Explore courses<span className="arw">&rarr;</span>
+              </Link>
+              <Link className="btn btn--ghost" to="/packages">
+                See packages
+              </Link>
+            </div>
+
+            <div className="proof rise d4">
+              <span>Self-paced</span>
+              <span>Start any time</span>
+              <span>Certificate included</span>
+            </div>
+          </div>
+
+          {/* how every course works — the four steps, then the certificate */}
+          <div className="frame rise d4">
+            <div className="frame-bar">
+              <i /><i /><i />
+              <span>How every course works</span>
+            </div>
+            <div className="wf">
+              <div className="wf-row">
+                {steps.map((step) => (
+                  <div className="wf-step" key={step.n}>
+                    <div className="wf-line" />
+                    <div className="wf-dot">{step.n}</div>
+                    <h4>{step.title}</h4>
+                    <p>{step.short}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="wf-out">
+                <span className="seal">&#10003;</span>
+                <span>
+                  <span className="t">Certificate of Completion</span>
+                  <br />
+                  <span className="s">Issued once all four are done</span>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

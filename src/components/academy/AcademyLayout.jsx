@@ -15,11 +15,11 @@ import wordWhite from '../../assets/wordmark-white.png'
 
 const links = [
   { name: 'Home', path: '/', end: true },
+  { name: 'About', path: '/about' },
   { name: 'Students', path: '/students' },
   { name: 'Professionals', path: '/professionals' },
   { name: 'Courses', path: '/courses' },
   { name: 'Packages', path: '/packages' },
-  { name: 'About', path: '/about' },
 ]
 
 const footerColumns = [
