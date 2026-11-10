@@ -1,16 +1,14 @@
-/**
+﻿/**
  * SITE LAYOUT — header, mobile menu, footer.
  *
- * Styling comes from the design system in index.css (.site-header, .nav,
- * .menu-btn, .mobile-nav, .site-footer), so this file carries structure and
- * behaviour only.
+ * The header is navy site-wide, so the logo and the menu use their white
+ * colourways. Styling comes from the design system in index.css.
  */
 
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 
-import markNavy from '../../assets/mark-navy.png'
-import wordNavy from '../../assets/wordmark-navy.png'
+import markWhite from '../../assets/mark-white.png'
 import wordWhite from '../../assets/wordmark-white.png'
 
 const links = [
@@ -44,8 +42,8 @@ const footerColumns = [
 function Brand({ onClick }) {
   return (
     <Link to="/" className="brand" onClick={onClick} aria-label="Discoursia.ai home">
-      <img className="mark" src={markNavy} alt="" />
-      <img className="word" src={wordNavy} alt="Discoursia.ai" />
+      <img className="mark" src={markWhite} alt="" />
+      <img className="word" src={wordWhite} alt="Discoursia.ai" />
     </Link>
   )
 }
@@ -100,7 +98,7 @@ function SiteLayout() {
             ))}
           </nav>
 
-          <Link className="btn btn--solid btn--sm" to="/packages">
+          <Link className="btn btn--light btn--sm" to="/packages">
             Get started<span className="arw">&rarr;</span>
           </Link>
 
@@ -125,7 +123,7 @@ function SiteLayout() {
                   <span className="chev">&rarr;</span>
                 </Link>
               ))}
-              <Link className="btn btn--solid" to="/packages">
+              <Link className="btn btn--light" to="/packages">
                 Get started<span className="arw">&rarr;</span>
               </Link>
             </div>

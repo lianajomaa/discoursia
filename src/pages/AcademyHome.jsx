@@ -2,9 +2,9 @@
  * HOMEPAGE  —  /
  *
  * A glimpse of the whole business: what Discoursia is, the four service areas,
- * corporate training, who it is for, how the learning works, what a course
- * includes, the courses themselves, the packages, the approach, and the
- * mission. Each block links deeper.
+ * corporate training, who it is for, what a course includes, the courses
+ * themselves, the packages, the approach, and the closing. Each block links
+ * deeper.
  *
  * Copy is from the Discoursia.ai content document. Styling comes from the
  * design system in index.css.
@@ -88,7 +88,7 @@ function Home() {
     <>
       {/* ---------------- HERO ---------------- */}
       <section className="hero">
-        <img className="watermark" src={markNavy} alt="" aria-hidden="true" />
+        <img className="watermark" src={markWhite} alt="" aria-hidden="true" />
         <div className="wrap hero-split">
           <div>
             <div className="eyebrow rise d1">AI · Research · Digital communication</div>
@@ -110,10 +110,10 @@ function Home() {
             </div>
 
             <div className="actions rise d4">
-              <Link className="btn btn--solid" to="/courses">
+              <Link className="btn btn--light" to="/courses">
                 Explore courses<span className="arw">&rarr;</span>
               </Link>
-              <Link className="btn btn--ghost" to="/packages">
+              <Link className="btn btn--outline-light" to="/packages">
                 See packages
               </Link>
             </div>
@@ -239,30 +239,8 @@ function Home() {
         </div>
       </section>
 
-      {/* ---------------- HOW LEARNING WORKS ---------------- */}
-      <section className="band band--paper">
-        <div className="wrap">
-          <div className="eyebrow">How learning works</div>
-          <h2 className="section-title">Learn. Practice. Apply.</h2>
-          <p className="section-sub">
-            Every course follows the same four-step path, so you always know where you are
-            and what comes next.
-          </p>
-
-          <div className="steps">
-            {steps.map((step) => (
-              <div className="step" key={step.n}>
-                <div className="n">{step.n}</div>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ---------------- WHAT'S INCLUDED ---------------- */}
-      <section className="band band--surface">
+      <section className="band band--paper">
         <div className="wrap">
           <div className="eyebrow">What&apos;s included</div>
           <h2 className="section-title">Everything you need to learn effectively.</h2>
@@ -279,7 +257,7 @@ function Home() {
       </section>
 
       {/* ---------------- COURSES ---------------- */}
-      <section className="band band--paper">
+      <section className="band band--surface">
         <div className="wrap">
           <div className="eyebrow">Courses</div>
           <h2 className="section-title">Start learning.</h2>
@@ -316,7 +294,7 @@ function Home() {
       </section>
 
       {/* ---------------- PACKAGES ---------------- */}
-      <section className="band band--surface">
+      <section className="band band--paper">
         <div className="wrap">
           <div className="eyebrow">Packages</div>
           <h2 className="section-title">Choose your package.</h2>
@@ -367,8 +345,8 @@ function Home() {
         </div>
       </section>
 
-      {/* ---------------- APPROACH ---------------- */}
-      <section className="band band--paper">
+      {/* ---------------- APPROACH + MISSION ---------------- */}
+      <section className="band band--surface">
         <div className="wrap split">
           <div>
             <div className="eyebrow">Our approach</div>
@@ -381,40 +359,10 @@ function Home() {
               responsible use of AI.
             </p>
             <p>
-              We believe the best results happen when human expertise and technology work
-              together.
+              AI should support human thinking, not replace it. We want students and
+              professionals to feel confident in a digital world — not simply using
+              technology, but understanding how to use it well.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- MISSION & VISION ---------------- */}
-      <section className="band band--surface">
-        <div className="wrap">
-          <div className="eyebrow">Mission &amp; vision</div>
-          <div className="grid grid--2" style={{ marginTop: '46px' }}>
-            <div className="cell">
-              <span className="idx">Our mission</span>
-              <h3>
-                To make AI, research and communication skills more practical, accessible and
-                relevant.
-              </h3>
-              <p>
-                We want students and professionals to feel more confident navigating an
-                increasingly digital and AI-driven world.
-              </p>
-            </div>
-            <div className="cell">
-              <span className="idx">Our vision</span>
-              <h3>
-                A future where people do not simply use technology — they understand how to
-                use it well.
-              </h3>
-              <p>
-                AI should support human thinking, not replace it. That belief shapes every
-                course and every workshop we build.
-              </p>
-            </div>
           </div>
         </div>
       </section>
