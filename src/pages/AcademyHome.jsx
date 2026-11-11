@@ -2,9 +2,9 @@
  * HOMEPAGE  —  /
  *
  * A glimpse of the whole business: what Discoursia is, the four service areas,
- * corporate training, who it is for, what a course includes, the courses
- * themselves, the packages, the approach, and the closing. Each block links
- * deeper.
+ * corporate training, who it is for, how the learning works, what a course
+ * includes, the courses themselves, the packages, the approach, and the
+ * mission. Each block links deeper.
  *
  * Copy is from the Discoursia.ai content document. Styling comes from the
  * design system in index.css.
@@ -240,7 +240,7 @@ function Home() {
       </section>
 
       {/* ---------------- WHAT'S INCLUDED ---------------- */}
-      <section className="band band--paper">
+      <section className="band band--surface">
         <div className="wrap">
           <div className="eyebrow">What&apos;s included</div>
           <h2 className="section-title">Everything you need to learn effectively.</h2>
@@ -257,7 +257,7 @@ function Home() {
       </section>
 
       {/* ---------------- COURSES ---------------- */}
-      <section className="band band--surface">
+      <section className="band band--paper">
         <div className="wrap">
           <div className="eyebrow">Courses</div>
           <h2 className="section-title">Start learning.</h2>
@@ -294,7 +294,7 @@ function Home() {
       </section>
 
       {/* ---------------- PACKAGES ---------------- */}
-      <section className="band band--paper">
+      <section className="band band--surface">
         <div className="wrap">
           <div className="eyebrow">Packages</div>
           <h2 className="section-title">Choose your package.</h2>
@@ -346,7 +346,7 @@ function Home() {
       </section>
 
       {/* ---------------- APPROACH + MISSION ---------------- */}
-      <section className="band band--surface">
+      <section className="band band--paper">
         <div className="wrap split">
           <div>
             <div className="eyebrow">Our approach</div>

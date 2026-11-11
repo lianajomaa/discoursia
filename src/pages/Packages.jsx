@@ -7,21 +7,16 @@
 
 import { Link } from 'react-router-dom'
 import { plans, institutions } from '../data/plans'
+import PageHead from '../components/academy/PageHead'
 
 function Packages() {
   return (
     <>
-      <section className="band band--surface" style={{ paddingBottom: 0 }}>
-        <div className="wrap">
-          <div className="eyebrow">Packages</div>
-          <h1 className="section-title" style={{ fontSize: 'clamp(2.4rem, 5vw, 4rem)' }}>
-            Choose your package.
-          </h1>
-          <p className="section-sub">
-            Start free, or unlock full access to every course, worksheet and certificate.
-          </p>
-        </div>
-      </section>
+      <PageHead
+        eyebrow="Packages"
+        title="Choose your package."
+        lead="Start free, or unlock full access to every course, worksheet and certificate."
+      />
 
       <section className="band band--surface">
         <div className="wrap">

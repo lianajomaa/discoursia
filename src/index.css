@@ -3,9 +3,10 @@
 /* ---------------------------------------------------------------------------
  * DISCOURSIA.AI — design system
  *
- * Navy / white distribution: bookends. Navy opens the page (header + hero)
- * and navy closes it (closing + footer); everything between is white and
- * pale paper. Navy otherwise appears only in buttons and small accents.
+ * The :root block below is the approved design: navy from the logo, one steel
+ * blue accent, cool off-white paper. The @theme block mirrors those values as
+ * Tailwind tokens so the course, lesson and quiz pages (written in Tailwind)
+ * stay on brand without being rewritten.
  * ------------------------------------------------------------------------- */
 
 @theme {
@@ -19,6 +20,8 @@
   --color-paper: #F7F8FB;
 }
 
+/* Layout: single column, 1120px measure, full-bleed bands alternating
+   paper / navy; fine rules carry the structure instead of boxes. */
 :root {
   --navy:        #333B60;   /* straight from the logo */
   --navy-deep:   #232942;
@@ -92,7 +95,7 @@
   margin-top: 0.62em;
 }
 
-/* ---------- header: navy, site-wide ---------- */
+/* ---------- header ---------- */
 body::before {
   content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
   background: var(--navy-deep); z-index: 60;
@@ -190,7 +193,7 @@ body::before {
 .btn--outline-light:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
 .btn--sm { padding: 11px 21px; font-size: 14px; }
 
-/* ---------- hero: the first bookend ---------- */
+/* ---------- hero: quiet. type does the work ---------- */
 .hero {
   padding-block: clamp(72px, 11vw, 150px) clamp(56px, 8vw, 104px);
   background: var(--navy-deep); color: #fff; position: relative; overflow: hidden;
@@ -217,6 +220,66 @@ body::before {
   line-height: 1.65; color: var(--muted); font-weight: 400;
 }
 .hero .actions { margin-top: 44px; display: flex; flex-wrap: wrap; gap: 14px; }
+
+/* ---------- page head: every page except the homepage opens on this ---------- */
+.page-head {
+  background: var(--navy-deep); color: #fff; position: relative; overflow: hidden;
+  padding-block: clamp(62px, 8vw, 108px) clamp(50px, 6vw, 82px);
+}
+.page-head h1 {
+  font-size: clamp(2.2rem, 5vw, 3.9rem); line-height: 1.08;
+  letter-spacing: -0.02em; max-width: 20ch; color: #fff;
+}
+.page-head h1 em { font-style: italic; color: #8FADDC; }
+.page-head .eyebrow { color: #8FADDC; }
+.page-head .eyebrow::before { background: #8FADDC; }
+.page-head .lead {
+  margin-top: 24px; max-width: 54ch; color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(1.04rem, 1.6vw, 1.22rem); line-height: 1.68;
+}
+.page-head .actions { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 13px; }
+
+/* ---------- a plain two-column prose row, for About and similar ---------- */
+.pair { display: grid; gap: 28px 48px; grid-template-columns: 1fr; margin-top: 50px; }
+@media (min-width: 760px) { .pair { grid-template-columns: 1fr 1fr; } }
+.pair h3 { font-family: var(--body); font-size: 1.05rem; font-weight: 600; }
+.pair p { margin-top: 9px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+
+/* ---------- contact rows ---------- */
+.rows { margin-top: 44px; display: flex; flex-direction: column; gap: 14px; max-width: 46ch; }
+.rows a {
+  display: flex; align-items: center; gap: 16px; padding: 20px 22px;
+  border: 1px solid var(--line); background: var(--surface);
+  transition: border-color 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.rows a:hover { border-color: var(--accent); transform: translateY(-2px); }
+.rows .ico { color: var(--accent); flex: none; }
+.rows .k { display: block; font-size: 15px; font-weight: 500; }
+.rows .v { display: block; font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+
+/* ---------- prose, for the legal pages ---------- */
+.prose { max-width: 62ch; }
+.prose .note {
+  margin-top: 4px; border-left: 2px solid var(--accent); background: var(--accent-soft);
+  padding: 16px 20px; font-size: 14.5px; line-height: 1.68; color: var(--text);
+}
+.prose section { margin-top: 36px; }
+.prose h2 { font-family: var(--body); font-size: 1.08rem; font-weight: 600; }
+.prose h2 + p { margin-top: 10px; color: var(--muted); font-size: 16px; line-height: 1.72; }
+
+/* ---------- featured course: card left, outcomes right ---------- */
+.feature { display: grid; gap: clamp(32px, 4.5vw, 56px); grid-template-columns: 1fr; margin-top: 44px; align-items: start; }
+@media (min-width: 960px) { .feature { grid-template-columns: 1.05fr 1fr; } }
+
+/* ---------- outcomes list and chips, for the path pages ---------- */
+.ticks { margin-top: 24px; display: flex; flex-direction: column; gap: 11px; }
+.ticks li { list-style: none; display: flex; gap: 12px; font-size: 16px; line-height: 1.6; color: var(--muted); }
+.ticks li .ico { color: var(--accent); flex: none; margin-top: 3px; }
+.chips { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li {
+  list-style: none; border: 1px solid var(--line); background: var(--surface);
+  padding: 7px 13px; font-size: 13px; color: var(--muted);
+}
 
 /* staged entrance, runs on load — ends visible, no observer */
 .rise { animation: rise 0.9s var(--ease) both; }
@@ -357,20 +420,44 @@ body::before {
   .wf-out { margin-top: 22px; padding-top: 17px; }
 }
 
-/* ---------- ticker: a light strip, so the navy hero stays the dark moment ---------- */
+/* ---------- ticker ----------
+   One step lighter than the hero, so it reads as a deliberate band rather
+   than more of the same navy. The gradients at both edges are the thing that
+   makes it look considered: without them, words slice off mid-letter at the
+   screen edge, which is what cheapens a marquee. Masking the whole strip
+   would fade the background too, so the fades are overlays in the band's own
+   colour. */
 .ticker {
-  background: var(--paper); border-bottom: 1px solid var(--line);
-  overflow: hidden; padding-block: 16px;
+  background: var(--navy); position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  overflow: hidden; padding-block: 15px;
 }
-.ticker-row { display: flex; width: max-content; animation: slide 40s linear infinite; }
+.ticker::before,
+.ticker::after {
+  content: ""; position: absolute; top: 0; bottom: 0; z-index: 2;
+  width: clamp(44px, 9vw, 110px); pointer-events: none;
+}
+.ticker::before { left: 0; background: linear-gradient(90deg, var(--navy) 12%, transparent); }
+.ticker::after { right: 0; background: linear-gradient(270deg, var(--navy) 12%, transparent); }
+
+/* slower than it was: a fast crawl reads as a banner ad, a slow one as a band */
+.ticker-row { display: flex; width: max-content; animation: slide 64s linear infinite; }
 .ticker:hover .ticker-row { animation-play-state: paused; }
 @keyframes slide { to { transform: translateX(-50%); } }
 .ticker span {
-  display: inline-flex; align-items: center; gap: 36px; padding-right: 36px;
-  font-size: 13.5px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--muted); white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 38px; padding-right: 38px;
+  font-size: 11.5px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66); white-space: nowrap;
 }
-.ticker span::after { content: ""; width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
+.ticker span::after {
+  content: ""; width: 3px; height: 3px; border-radius: 50%;
+  background: #8FADDC; opacity: 0.8;
+}
+@media (max-width: 560px) {
+  .ticker { padding-block: 13px; }
+  .ticker span { font-size: 10.5px; letter-spacing: 0.18em; gap: 26px; padding-right: 26px; }
+}
 
 /* ---------- editorial two-column ---------- */
 .split { display: grid; gap: clamp(32px, 5vw, 76px); grid-template-columns: 1fr; }

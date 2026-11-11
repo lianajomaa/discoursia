@@ -1,8 +1,9 @@
-﻿/**
+/**
  * SITE LAYOUT — header, mobile menu, footer.
  *
- * The header is navy site-wide, so the logo and the menu use their white
- * colourways. Styling comes from the design system in index.css.
+ * Styling comes from the design system in index.css (.site-header, .nav,
+ * .menu-btn, .mobile-nav, .site-footer), so this file carries structure and
+ * behaviour only.
  */
 
 import { useEffect, useState } from 'react'

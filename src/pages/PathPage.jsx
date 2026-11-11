@@ -1,9 +1,8 @@
 /**
  * PATH PAGE  —  /students  and  /professionals
- * Specification sections 10 and 11.
  *
- * Both pages are the same template with different data, exactly as the two
- * sections describe. App.jsx passes the audience:
+ * Both pages are the same template with different data. App.jsx passes the
+ * audience:
  *
  *   <Route path="/students"      element={<PathPage audience="students" />} />
  *   <Route path="/professionals" element={<PathPage audience="professionals" />} />
@@ -16,6 +15,8 @@ import { Link, Navigate } from 'react-router-dom'
 import { Check } from 'lucide-react'
 import { getCoursesByAudience, getPath } from '../data/courses'
 import CourseCard from '../components/academy/CourseCard'
+import PageHead from '../components/academy/PageHead'
+import markWhite from '../assets/mark-white.png'
 
 function PathPage({ audience }) {
   const path = getPath(audience)
@@ -29,97 +30,68 @@ function PathPage({ audience }) {
 
   return (
     <>
-      {/* ---------------- HERO ---------------- */}
-      <section className="border-b border-slate-100 bg-white px-8 py-20 md:px-12 md:py-24">
-        <div className="mx-auto max-w-5xl">
-          <div className="max-w-3xl">
-            <div className="mb-5 flex items-center gap-3">
-              <span className="h-0.5 w-6 bg-navy" />
-              <span className="text-xs tracking-[0.2em] text-navy">
-                {path.label.toUpperCase()}
-              </span>
-            </div>
-
-            <h1 className="font-serif text-4xl font-medium leading-[1.1] tracking-tight text-navy md:text-5xl">
-              {path.heroTitle}
-            </h1>
-
-            <p className="mt-6 max-w-xl text-sm leading-relaxed text-navy/80 md:text-base">
-              {path.heroSubtitle}
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHead eyebrow={path.label} title={path.heroTitle} lead={path.heroSubtitle}>
+        <Link className="btn btn--light" to="/courses">
+          Browse all courses<span className="arw">&rarr;</span>
+        </Link>
+        <Link className="btn btn--outline-light" to="/packages">
+          See packages
+        </Link>
+      </PageHead>
 
       {/* ---------------- FEATURED COURSE ---------------- */}
-      <section className="border-b border-slate-100 bg-slate-50 px-8 py-16 md:px-12 md:py-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-10 flex items-center gap-3">
-            <span className="h-[7px] w-[7px] border border-navy bg-baby" />
-            <span className="text-xs tracking-[0.2em] text-navy">FEATURED COURSE</span>
-          </div>
+      <section className="band band--paper">
+        <div className="wrap">
+          <div className="eyebrow">Featured course</div>
 
           {featured ? (
-            <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-              {/* left: the card */}
+            <div className="feature">
               <CourseCard course={featured} featured />
 
-              {/* right: what you'll learn + includes */}
               <div>
-                <h2 className="font-serif text-2xl font-medium text-navy">What You&apos;ll Learn</h2>
-                <p className="mt-2 text-sm text-navy/70">
+                <h2 className="section-title" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.4rem)' }}>
+                  What you&apos;ll learn
+                </h2>
+                <p className="section-sub" style={{ marginTop: '14px' }}>
                   By the end of this course, you will be able to:
                 </p>
 
-                <ul className="mt-5 space-y-2.5">
+                <ul className="ticks">
                   {featured.outcomes.map((outcome) => (
-                    <li key={outcome} className="flex gap-3 text-sm leading-relaxed text-navy/80">
-                      <Check
-                        size={16}
-                        className="mt-0.5 flex-shrink-0 text-navy"
-                        aria-hidden="true"
-                      />
+                    <li key={outcome}>
+                      <Check size={17} className="ico" aria-hidden="true" />
                       {outcome}
                     </li>
                   ))}
                 </ul>
 
-                <h3 className="mt-9 text-base font-medium text-navy">Course Includes</h3>
-                <ul className="mt-3 flex flex-wrap gap-2">
+                <h3 style={{ marginTop: '34px', fontFamily: 'var(--body)', fontSize: '1.02rem', fontWeight: 600 }}>
+                  Course includes
+                </h3>
+                <ul className="chips">
                   {featured.includes.map((item) => (
-                    <li
-                      key={item}
-                      className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[12px] text-navy/80"
-                    >
-                      {item}
-                    </li>
+                    <li key={item}>{item}</li>
                   ))}
                 </ul>
 
-                <Link
-                  to={`/courses/${featured.slug}`}
-                  className="mt-9 inline-block rounded-md bg-navy px-6 py-3 text-sm font-medium text-white transition hover:bg-navy/90"
-                >
-                  Start Learning
+                <Link className="btn btn--solid" style={{ marginTop: '32px' }} to={`/courses/${featured.slug}`}>
+                  Start learning<span className="arw">&rarr;</span>
                 </Link>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-navy/70">
-              Courses for this path are coming soon.
-            </p>
+            <p className="section-sub">Courses for this path are coming soon.</p>
           )}
         </div>
       </section>
 
       {/* ---------------- MORE COURSES (empty today, ready for course 3) ---------------- */}
       {others.length > 0 && (
-        <section className="border-b border-slate-100 bg-white px-8 py-16 md:px-12 md:py-20">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-10 font-serif text-3xl font-medium tracking-tight text-navy">
-              More Courses
-            </h2>
-            <div className="grid gap-6 md:grid-cols-2">
+        <section className="band band--surface">
+          <div className="wrap">
+            <div className="eyebrow">More courses</div>
+            <h2 className="section-title">Keep going.</h2>
+            <div className="courses">
               {others.map((course) => (
                 <CourseCard key={course.slug} course={course} />
               ))}
@@ -128,23 +100,23 @@ function PathPage({ audience }) {
         </section>
       )}
 
-      {/* ---------------- CTA ---------------- */}
-      <section className="bg-navy px-8 py-16 md:px-12">
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="font-serif text-2xl font-medium text-white md:text-3xl">
-              Not sure this is the right path?
-            </h2>
-            <p className="mt-2 text-sm text-white/80">
-              Compare both learning paths and choose what fits your goals.
-            </p>
+      {/* ---------------- CLOSING ---------------- */}
+      <section className="band closing">
+        <div className="wrap">
+          <img src={markWhite} alt="" aria-hidden="true" />
+          <h2>Not sure this is the right path?</h2>
+          <p>Compare both learning paths and choose what fits your goals.</p>
+          <div className="actions">
+            <Link
+              className="btn btn--light"
+              to={audience === 'students' ? '/professionals' : '/students'}
+            >
+              See the other path<span className="arw">&rarr;</span>
+            </Link>
+            <Link className="btn btn--outline-light" to="/contact">
+              Ask us
+            </Link>
           </div>
-          <Link
-            to="/#paths"
-            className="flex-shrink-0 rounded-md bg-white px-6 py-3 text-sm font-medium text-navy transition hover:bg-baby"
-          >
-            Compare Paths
-          </Link>
         </div>
       </section>
     </>
