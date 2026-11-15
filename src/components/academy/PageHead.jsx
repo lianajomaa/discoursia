@@ -6,9 +6,9 @@
  * middle, navy again at the bottom.
  */
 
-function PageHead({ eyebrow, title, lead, children }) {
+function PageHead({ eyebrow, title, lead, tight, children }) {
   return (
-    <section className="page-head">
+    <section className={tight ? 'page-head page-head--tight' : 'page-head'}>
       <div className="wrap">
         {eyebrow ? <div className="eyebrow rise d1">{eyebrow}</div> : null}
         <h1 className="rise d2">{title}</h1>

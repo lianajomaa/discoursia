@@ -602,6 +602,144 @@ h2.section-title {
 .b2b h3 { font-size: 1.55rem; }
 .b2b p { margin-top: 10px; color: var(--muted); font-size: 16px; line-height: 1.68; font-weight: 400; max-width: 52ch; }
 
+/* ---------- checkout ----------
+   A shorter head than the other pages. On a checkout the form and the total
+   are the page — a full-screen banner above them just pushes the thing people
+   came to do below the fold. */
+.page-head--tight { padding-block: clamp(34px, 4vw, 54px) clamp(30px, 3.4vw, 46px); }
+.page-head--tight h1 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); max-width: 24ch; }
+.page-head--tight .lead { margin-top: 16px; font-size: clamp(0.98rem, 1.3vw, 1.08rem); max-width: 60ch; }
+
+/* ---------- checkout ---------- */
+.co-back {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 14px;
+  color: var(--muted); transition: color 0.3s var(--ease);
+}
+.co-back:hover { color: var(--accent); }
+
+/* minmax(0, …) not 1fr: a grid track's default minimum is min-content, and a
+   text input's min-content is ~20 characters, so a plain 1fr refused to
+   shrink and pushed the page 194px wider than the phone. */
+.checkout {
+  display: grid; gap: clamp(32px, 4vw, 52px);
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 36px; align-items: start;
+}
+@media (min-width: 940px) {
+  .checkout { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.85fr); }
+}
+
+/* the "this is not live" band — deliberately hard to miss */
+.co-preview {
+  grid-column: 1 / -1;
+  border-left: 2px solid var(--accent); background: var(--accent-soft);
+  padding: 16px 20px; font-size: 14.5px; line-height: 1.65; color: var(--text);
+}
+.co-preview strong { font-weight: 600; }
+
+/* On a phone the summary would otherwise land below the whole form, so nobody
+   sees the price until after they have filled it in. Pull it up: notice,
+   then what you are paying, then the form. */
+@media (max-width: 939px) {
+  .co-preview { order: -2; }
+  .summary { order: -1; }
+  .co-step:first-of-type { margin-top: 0; }
+}
+
+.co-step { margin-top: 38px; }
+.co-step-head { display: flex; align-items: center; gap: 14px; }
+.co-step-head .n {
+  width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 50%;
+  display: grid; place-items: center; font-family: var(--display);
+  font-size: 13px; color: var(--muted); flex: none;
+}
+.co-step-head h2 { font-size: 1.35rem; }
+
+.co-fields, .co-card-fields { margin-top: 22px; display: flex; flex-direction: column; gap: 18px; }
+.co-row { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+
+.co-field { display: flex; flex-direction: column; gap: 7px; }
+.co-field > span {
+  font-size: 12.5px; font-weight: 500; letter-spacing: 0.02em;
+  display: flex; align-items: baseline; gap: 8px;
+}
+.co-field > span em {
+  font-style: normal; font-weight: 400; font-size: 11.5px;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em;
+}
+.co-field input {
+  font: inherit; font-size: 15.5px; padding: 13px 15px; border-radius: 2px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+  transition: border-color 0.3s var(--ease);
+  width: 100%; min-width: 0; /* stops the two-up row blowing out on narrow phones */
+}
+.co-field input:focus { outline: none; border-color: var(--accent); }
+/* disabled is the normal state until payments exist — it should read as
+   "switched off", not as an error */
+.co-field input:disabled { background: var(--paper); color: var(--muted); cursor: not-allowed; }
+.co-field small { font-size: 12.5px; color: var(--muted); }
+
+.co-methods { margin-top: 22px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 520px) { .co-methods { grid-template-columns: 1fr; } }
+.co-method {
+  border: 1px solid var(--line); background: var(--surface); padding: 15px 17px;
+  display: flex; flex-direction: column; gap: 3px; cursor: not-allowed;
+  transition: border-color 0.3s var(--ease);
+}
+.co-method.is-on { border-color: var(--accent); background: var(--accent-soft); }
+.co-method input { position: absolute; opacity: 0; pointer-events: none; }
+.co-method .mk { display: inline-flex; align-items: center; gap: 7px; font-size: 14.5px; font-weight: 600; }
+.co-method .ms { font-size: 12.5px; color: var(--muted); }
+
+.co-secure {
+  margin-top: 16px; display: flex; align-items: flex-start; gap: 9px;
+  font-size: 12.5px; color: var(--muted); line-height: 1.6;
+}
+.co-secure svg { flex: none; margin-top: 2px; color: var(--accent); }
+
+.co-check { margin-top: 22px; display: flex; align-items: flex-start; gap: 11px; font-size: 14.5px; line-height: 1.6; }
+.co-check input { margin-top: 4px; width: 16px; height: 16px; accent-color: var(--accent); flex: none; }
+.co-check a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+.co-pay { margin-top: 24px; width: 100%; justify-content: center; font-size: 16px; padding-block: 17px; }
+.co-pay:disabled { opacity: 0.45; cursor: not-allowed; transform: none; background: var(--navy-deep); }
+.co-fine { margin-top: 12px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+
+/* ---------- order summary ---------- */
+.summary { border: 1px solid var(--line); background: var(--surface); }
+@media (min-width: 940px) { .summary { position: sticky; top: 104px; } }
+.summary-head {
+  padding: 15px 22px; border-bottom: 1px solid var(--line); background: var(--paper);
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+}
+.summary-body { padding: 24px 22px 26px; }
+.summary-plan { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.summary-plan .pn { font-size: 1.05rem; font-weight: 600; }
+.summary-plan .pp { font-family: var(--display); font-size: 1.5rem; white-space: nowrap; }
+.summary-tag { margin-top: 8px; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.summary-list { margin-top: 20px; display: flex; flex-direction: column; gap: 9px; }
+.summary-list li { list-style: none; font-size: 13.5px; color: var(--muted); display: flex; gap: 10px; line-height: 1.5; }
+.summary-list li::before { content: ""; width: 4px; height: 4px; margin-top: 8px; flex: none; background: var(--accent); }
+.summary-rows { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-direction: column; gap: 9px; }
+.summary-row { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--muted); }
+.summary-total {
+  margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  font-size: 14px; font-weight: 500;
+}
+.summary-total .t { font-family: var(--display); font-size: 1.6rem; font-weight: 500; white-space: nowrap; }
+.summary-change {
+  margin-top: 18px; display: inline-block; font-size: 13.5px; color: var(--accent);
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.summary-foot {
+  border-top: 1px solid var(--line); background: var(--paper);
+  padding: 16px 22px; display: flex; align-items: flex-start; gap: 11px;
+  font-size: 12.5px; color: var(--muted); line-height: 1.6;
+}
+.summary-foot svg { flex: none; margin-top: 2px; color: var(--accent); }
+.summary-foot strong { color: var(--text); font-weight: 600; }
+
 /* ---------- closing: the second bookend ---------- */
 .closing { background: var(--navy-deep); color: #fff; text-align: center; }
 .closing img { height: 46px; width: auto; opacity: 0.9; }

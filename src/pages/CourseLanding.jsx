@@ -409,6 +409,29 @@ function CourseLanding() {
           </div>
         </section>
       )}
+      {/* ============================================================
+       * PACKAGES
+       *
+       * The course page is where someone decides they want the course, so it
+       * has to offer a way to buy it. Without this the page is a dead end:
+       * every link on it led further into the course or back to the path.
+       * ============================================================ */}
+      <section className="band band--surface">
+        <div className="wrap">
+          <div className="b2b" style={{ marginTop: 0 }}>
+            <div>
+              <h3>Get full access to this course</h3>
+              <p>
+                Every lesson, worksheet, quiz and the Certificate of Completion — from 3 KWD.
+                Start free first if you would rather see the course before you decide.
+              </p>
+            </div>
+            <Link className="btn btn--solid" to="/packages">
+              See packages<span className="arw">&rarr;</span>
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
