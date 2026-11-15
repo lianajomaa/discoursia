@@ -1,58 +1,24 @@
 /**
  * HOMEPAGE  —  /
  *
- * A glimpse of the whole business: what Discoursia is, the four service areas,
- * corporate training, who it is for, how the learning works, what a course
- * includes, the courses themselves, the packages, the approach, and the
- * mission. Each block links deeper.
+ * A glimpse of the whole business in seven numbered sections. Every section
+ * opens on a rule with a number and a label, so the page reads as one
+ * document rather than a stack of blocks.
  *
- * Copy is from the Discoursia.ai content document. Styling comes from the
- * design system in index.css.
+ * Rules this page follows:
+ *   · one idea per section, said once
+ *   · anything that was a title with a paragraph under it is an accordion
+ *   · packages are a condensed strip here; the full cards live on /packages
+ *   · navy lands three times — top, middle, close
  */
 
 import { Link } from 'react-router-dom'
 import { courses, getCourseStats } from '../data/courses'
-import { plans, institutions, formatPrice } from '../data/plans'
-import markNavy from '../assets/mark-navy.png'
+import { plans, institutions } from '../data/plans'
 import markWhite from '../assets/mark-white.png'
+import Rotator from '../components/academy/Rotator'
+import SectionHead from '../components/academy/SectionHead'
 
-const services = [
-  {
-    title: 'AI & Prompt Engineering',
-    text: 'Write effective prompts, structure conversations with AI, refine outputs and use AI tools more strategically.',
-  },
-  {
-    title: 'Research Skills',
-    text: 'Go from an idea to a well-structured project — research questions, literature search, source evaluation and methodology.',
-  },
-  {
-    title: 'Communication',
-    text: 'Strengthen the way you write, present, collaborate and communicate in academic and professional settings.',
-  },
-  {
-    title: 'Digital Communication',
-    text: 'Understand how language, tone and platforms shape messages in an AI-driven digital world.',
-  },
-]
-
-const audiences = [
-  {
-    tag: 'University students',
-    title: 'For students who want to feel more confident.',
-    text: 'From research assignments to presentations, AI tools and academic projects, Discoursia.ai helps students develop skills they can actually use.',
-    to: '/students',
-    cta: 'Explore student learning',
-  },
-  {
-    tag: 'Professionals',
-    title: 'For professionals who want to stay ahead.',
-    text: 'Improve workplace communication, use AI more effectively, and strengthen your research and digital skills — designed around real professional needs.',
-    to: '/professionals',
-    cta: 'Explore professional learning',
-  },
-]
-
-// Outcome lines that rotate under the headline, one at a time.
 const outcomes = [
   'Write a research question you can actually answer.',
   'Turn a vague prompt into one that gets usable output.',
@@ -60,21 +26,60 @@ const outcomes = [
   'Present your work so people remember it.',
 ]
 
-// `short` is the two-word version used inside the hero frame.
 const steps = [
-  { n: '01', title: 'Watch', short: 'Short video lessons', text: 'Short, focused video lessons.' },
-  { n: '02', title: 'Practice', short: 'Hands-on activities', text: 'Apply each concept through practical activities.' },
-  { n: '03', title: 'Check', short: 'Short quizzes', text: 'Test your understanding with short quizzes.' },
-  { n: '04', title: 'Apply', short: 'Real scenarios', text: 'Complete tasks based on realistic situations.' },
+  { n: '01', title: 'Watch', short: 'Short video lessons' },
+  { n: '02', title: 'Practice', short: 'Hands-on activities' },
+  { n: '03', title: 'Check', short: 'Short quizzes' },
+  { n: '04', title: 'Apply', short: 'Real scenarios' },
+]
+
+const disciplines = [
+  {
+    title: 'AI & Prompt Engineering',
+    text: 'Write effective prompts, structure conversations with AI, and refine outputs — so you get usable work back instead of generic text.',
+  },
+  {
+    title: 'Research Skills',
+    text: 'Go from an idea to a well-structured project: research questions, literature search, source evaluation and methodology.',
+  },
+  {
+    title: 'Communication',
+    text: 'Strengthen how you write, present, collaborate and communicate in academic and professional settings.',
+  },
+  {
+    title: 'Digital Communication',
+    text: 'Understand how language, tone and platform shape a message in an AI-driven digital world.',
+  },
+  {
+    title: 'Corporate training',
+    text: 'Workshops built around real workplace needs — AI at work, prompt engineering, ethical AI and professional communication. Delivered for teams and institutions.',
+  },
+]
+
+const audiences = [
+  {
+    tag: 'University students',
+    title: 'Feel confident in your own work.',
+    text: 'Research assignments, presentations, AI tools and academic projects — skills you can use this semester.',
+    to: '/students',
+    cta: 'Explore student learning',
+  },
+  {
+    tag: 'Professionals',
+    title: 'Stay ahead at work.',
+    text: 'Better workplace communication, sharper AI use, stronger research and digital skills.',
+    to: '/professionals',
+    cta: 'Explore professional learning',
+  },
 ]
 
 const included = [
-  { title: 'Short video lessons', text: 'Focused lessons designed to make learning manageable.' },
-  { title: 'Knowledge checks', text: 'Short quizzes that reinforce the key concepts.' },
-  { title: 'Practical exercises', text: 'Apply what you learn instead of only watching videos.' },
-  { title: 'Downloadable resources', text: 'Worksheets, templates and course materials.' },
-  { title: 'Real-world scenarios', text: 'Practise with situations from university and the workplace.' },
-  { title: 'Certificate of completion', text: 'Awarded once you finish the course requirements.' },
+  { title: 'Short video lessons', text: 'Focused, so a course gets finished.' },
+  { title: 'Knowledge checks', text: 'Quizzes that lock in the concepts.' },
+  { title: 'Practical exercises', text: 'Apply it, don’t just watch it.' },
+  { title: 'Downloadable resources', text: 'Worksheets, templates, materials.' },
+  { title: 'Real-world scenarios', text: 'Situations from study and work.' },
+  { title: 'Certificate', text: 'Awarded when you finish.' },
 ]
 
 const ticker = [
@@ -82,6 +87,14 @@ const ticker = [
   'Academic writing', 'Presentation skills', 'Literature search',
   'Workplace communication', 'Responsible AI',
 ]
+
+// one line each, so the condensed strip stays a strip
+const blurbs = {
+  free: 'Selected lessons and course previews.',
+  'basic-student': 'One full course, with certificate.',
+  'pro-student': 'Both paths, all modules, every certificate.',
+  'premium-student': 'Everything, plus new courses as released.',
+}
 
 function Home() {
   return (
@@ -97,16 +110,8 @@ function Home() {
               Learn smarter. <em>Communicate better.</em> Work with AI.
             </h1>
 
-            {/* the running lines — one outcome at a time */}
-            <ul className="rotator rise d3">
-              {outcomes.map((line) => (
-                <li key={line}>{line}</li>
-              ))}
-            </ul>
-            <div className="tick rise d3" aria-hidden="true">
-              {outcomes.map((line) => (
-                <i key={line} />
-              ))}
+            <div className="rise d3">
+              <Rotator lines={outcomes} />
             </div>
 
             <div className="actions rise d4">
@@ -125,7 +130,6 @@ function Home() {
             </div>
           </div>
 
-          {/* how every course works — the four steps, then the certificate */}
           <div className="frame rise d4">
             <div className="frame-bar">
               <i /><i /><i />
@@ -137,8 +141,10 @@ function Home() {
                   <div className="wf-step" key={step.n}>
                     <div className="wf-line" />
                     <div className="wf-dot">{step.n}</div>
-                    <h4>{step.title}</h4>
-                    <p>{step.short}</p>
+                    <div className="wf-tx">
+                      <h4>{step.title}</h4>
+                      <p>{step.short}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -164,65 +170,55 @@ function Home() {
         </div>
       </div>
 
-      {/* ---------------- WHAT IS ---------------- */}
+      {/* ---------------- 01 THE IDEA ---------------- */}
       <section className="band band--surface">
-        <div className="wrap split">
-          <div>
-            <div className="eyebrow">What is Discoursia.ai</div>
-            <h2>One platform. Four skills. Real-world impact.</h2>
-          </div>
-          <div className="col-b">
-            <p>
-              AI is changing the way we study, research, work and communicate. We bring
-              together AI skills, prompt engineering, research and communication to help
-              people use technology more effectively.
-            </p>
-            <p>
-              Whether you are a university student working on your first research project or
-              a professional looking to work more effectively with AI, we help you turn
-              knowledge into practice.
-            </p>
-          </div>
+        <div className="wrap">
+          <SectionHead
+            no="01"
+            label="The idea"
+            title="Most people were never taught how to use AI well."
+            lead="We teach the skills underneath it — research, judgement and clear communication — so technology makes your work better, not just faster."
+          >
+            <Link className="lead-link" to="/about">
+              More about us<span className="arw">&rarr;</span>
+            </Link>
+          </SectionHead>
         </div>
       </section>
 
-      {/* ---------------- SERVICES ---------------- */}
+      {/* ---------------- 02 DISCIPLINES ---------------- */}
       <section className="band band--paper">
         <div className="wrap">
-          <div className="eyebrow">What we do</div>
-          <h2 className="section-title">Learn. Research. Create. Communicate.</h2>
+          <SectionHead
+            no="02"
+            label="Disciplines"
+            title="Four disciplines, one way of thinking."
+            lead="Open any one to see what it covers."
+          />
 
-          <div className="grid grid--2">
-            {services.map((service, i) => (
-              <div className="cell" key={service.title}>
-                <span className="idx">0{i + 1}</span>
-                <h3>{service.title}</h3>
-                <p>{service.text}</p>
-              </div>
+          <div className="acc">
+            {disciplines.map((item, i) => (
+              <details key={item.title} open={i === 0}>
+                <summary>
+                  <span className="ix">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="h">{item.title}</span>
+                </summary>
+                <div className="body">{item.text}</div>
+              </details>
             ))}
-          </div>
-
-          <div className="b2b" style={{ marginTop: '24px' }}>
-            <div>
-              <h3>Corporate training</h3>
-              <p>
-                Workshops built around practical workplace needs — AI at work, prompt
-                engineering, ethical AI, digital and professional communication, and
-                AI-supported productivity.
-              </p>
-            </div>
-            <Link className="btn btn--solid" to="/contact">
-              Talk to us about training<span className="arw">&rarr;</span>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* ---------------- WHO WE HELP ---------------- */}
+      {/* ---------------- 03 WHO IT IS FOR ---------------- */}
       <section className="band band--surface">
         <div className="wrap">
-          <div className="eyebrow">Who we help</div>
-          <h2 className="section-title">Built for where you are now.</h2>
+          <SectionHead
+            no="03"
+            label="Who it is for"
+            title="Built for where you are now."
+            lead="Two paths. Same standard of teaching, different starting point."
+          />
 
           <div className="aud">
             {audiences.map((audience) => (
@@ -239,13 +235,17 @@ function Home() {
         </div>
       </section>
 
-      {/* ---------------- WHAT'S INCLUDED ---------------- */}
-      <section className="band band--surface">
+      {/* ---------------- 04 INSIDE EVERY COURSE (navy, mid-page) ---------- */}
+      <section className="band band--navy">
         <div className="wrap">
-          <div className="eyebrow">What&apos;s included</div>
-          <h2 className="section-title">Everything you need to learn effectively.</h2>
+          <SectionHead
+            no="04"
+            label="Inside every course"
+            title="Everything you need. Nothing you don't."
+            lead="The same six things in every course, so you always know what you are getting."
+          />
 
-          <div className="grid grid--3">
+          <div className="grid grid--3 grid--onnavy">
             {included.map((item) => (
               <div className="cell" key={item.title}>
                 <h3>{item.title}</h3>
@@ -256,12 +256,15 @@ function Home() {
         </div>
       </section>
 
-      {/* ---------------- COURSES ---------------- */}
-      <section className="band band--paper">
+      {/* ---------------- 05 COURSES ---------------- */}
+      <section className="band band--surface">
         <div className="wrap">
-          <div className="eyebrow">Courses</div>
-          <h2 className="section-title">Start learning.</h2>
-          <p className="section-sub">Focused courses. Short lessons. Practical application.</p>
+          <SectionHead
+            no="05"
+            label="Courses"
+            title="Two courses. Both finishable in an afternoon."
+            lead="Short lessons, real exercises, a certificate at the end."
+          />
 
           <div className="courses">
             {courses.map((course) => {
@@ -278,8 +281,6 @@ function Home() {
                     <li>{course.level}</li>
                     <li>{course.duration.replace('Approximately', 'About')}</li>
                     <li>{stats.lessons} lessons</li>
-                    <li>{stats.quizzes} quizzes</li>
-                    <li>{stats.exercises} practical exercises</li>
                     <li>Certificate</li>
                   </ul>
 
@@ -293,77 +294,52 @@ function Home() {
         </div>
       </section>
 
-      {/* ---------------- PACKAGES ---------------- */}
-      <section className="band band--surface">
+      {/* ---------------- 06 PACKAGES (condensed) ---------------- */}
+      <section className="band band--paper">
         <div className="wrap">
-          <div className="eyebrow">Packages</div>
-          <h2 className="section-title">Choose your package.</h2>
-          <p className="section-sub">Start free, or unlock full access to the courses.</p>
+          <SectionHead
+            no="06"
+            label="Packages"
+            title="Start free. Upgrade when it is worth it."
+            lead="No trial that quietly becomes a subscription."
+          />
 
-          <div className="plans">
+          <div className="pk">
             {plans.map((plan) => (
-              <div
-                className={`plan ${plan.highlighted ? 'plan--featured' : ''}`}
+              <Link
                 key={plan.id}
+                to={`/checkout/${plan.id}`}
+                className={plan.highlighted ? 'best' : undefined}
               >
-                <span className="name">{plan.name}</span>
-                <div className="price">
-                  {plan.price === 0 ? 'Free' : plan.price}
-                  {plan.price !== 0 && <small>KWD</small>}
+                {plan.highlighted ? <span className="flag">Most chosen</span> : null}
+                <span className="n">{plan.name.replace(' Student', '')}</span>
+                <div className="v">
+                  {plan.price}
+                  <small>KWD</small>
                 </div>
-                <div className="rule" />
-                <ul>
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                  {plan.notIncluded.map((feature) => (
-                    <li className="off" key={feature}>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  className={`btn ${plan.highlighted ? 'btn--solid' : 'btn--ghost'}`}
-                  to={`/checkout/${plan.id}`}
-                >
-                  {plan.cta}
-                  {plan.highlighted && <span className="arw">&rarr;</span>}
-                </Link>
-              </div>
+                <p className="d">{blurbs[plan.id]}</p>
+              </Link>
             ))}
           </div>
 
-          <div className="b2b">
-            <div>
-              <h3>{institutions.title}</h3>
-              <p>{institutions.description}</p>
-            </div>
-            <Link className="btn btn--solid" to="/contact">
-              {institutions.cta}<span className="arw">&rarr;</span>
+          <div className="pk-foot">
+            <p>Universities and organisations are priced separately.</p>
+            <Link className="btn btn--solid" to="/packages">
+              Compare all packages<span className="arw">&rarr;</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ---------------- APPROACH + MISSION ---------------- */}
-      <section className="band band--paper">
-        <div className="wrap split">
-          <div>
-            <div className="eyebrow">Our approach</div>
-            <h2>We don&apos;t just teach tools. We teach you how to think with them.</h2>
-          </div>
-          <div className="col-b">
-            <p>
-              Technology changes quickly. Skills last longer. That is why our approach
-              focuses on critical thinking, practical application, communication and
-              responsible use of AI.
-            </p>
-            <p>
-              AI should support human thinking, not replace it. We want students and
-              professionals to feel confident in a digital world — not simply using
-              technology, but understanding how to use it well.
-            </p>
-          </div>
+      {/* ---------------- 07 OUR THINKING ---------------- */}
+      <section className="band band--surface">
+        <div className="wrap">
+          <SectionHead
+            no="07"
+            label="Our thinking"
+            title="We teach you how to think with the tools."
+            lead="Technology changes quickly; judgement lasts. AI should support human thinking, not replace it — and that belief shapes every course we build."
+          />
         </div>
       </section>
 
@@ -372,10 +348,7 @@ function Home() {
         <div className="wrap">
           <img src={markWhite} alt="" aria-hidden="true" />
           <h2>Ready to learn differently?</h2>
-          <p>
-            Explore our courses, services, events and resources — and find the skills you
-            need for your next step.
-          </p>
+          <p>Explore the courses and find the skills you need for your next step.</p>
           <div className="actions">
             <Link className="btn btn--light" to="/courses">
               Start exploring<span className="arw">&rarr;</span>

@@ -1,31 +1,31 @@
 /**
  * ABOUT  —  /about
  *
- * Opens on the navy page head, like every page other than the homepage, then
- * white and pale paper bands, then the navy closing. Same rhythm as the rest
- * of the site.
+ * Four numbered sections, same grid as every other page. The beliefs were
+ * four stacked title-and-paragraph boxes; they are an accordion now.
  */
 
 import { Link } from 'react-router-dom'
 import PageHead from '../components/academy/PageHead'
+import SectionHead from '../components/academy/SectionHead'
 import markWhite from '../assets/mark-white.png'
 
 const beliefs = [
   {
     title: 'Practical over theoretical',
-    text: 'Every lesson ends with something you can apply the same day.',
+    text: 'Every lesson ends with something you can apply the same day. If a concept cannot be used, it does not earn a place in the course.',
   },
   {
     title: 'Short and focused',
-    text: 'No filler. Courses are built to be finished, not abandoned.',
+    text: 'No filler. Courses are built to be finished, not abandoned — which is why each one fits inside an afternoon.',
   },
   {
     title: 'Human-centred',
-    text: 'Technology supports learning; it does not replace critical thinking.',
+    text: 'Technology supports learning; it does not replace critical thinking. We teach judgement alongside the tools.',
   },
   {
     title: 'Quality over quantity',
-    text: 'A small number of courses done properly, rather than a large catalogue.',
+    text: 'A small number of courses done properly, rather than a large catalogue nobody finishes.',
   },
 ]
 
@@ -35,41 +35,38 @@ function About() {
       <PageHead
         eyebrow="About"
         title="Learning built for real life, not just the classroom."
-        lead="We build short, practical courses for university students and working professionals — the skills people actually use to study, work and communicate better."
+        lead="Short, practical courses for university students and working professionals — the skills people actually use to study, work and communicate."
       />
 
       <section className="band band--surface">
-        <div className="wrap split">
-          <div>
-            <div className="eyebrow">What is Discoursia.ai</div>
-            <h2>One platform. Four skills. Real-world impact.</h2>
-          </div>
-          <div className="col-b">
-            <p>
-              AI is changing the way we study, research, work and communicate. We bring
-              together AI skills, prompt engineering, research and communication to help
-              people use technology more effectively.
-            </p>
-            <p>
-              Whether you are a university student working on your first research project or
-              a professional looking to work more effectively with AI, we help you turn
-              knowledge into practice.
-            </p>
-          </div>
+        <div className="wrap">
+          <SectionHead
+            no="01"
+            label="The idea"
+            title="Most people were never taught how to use AI well."
+            lead="We teach the skills underneath it — research, judgement and clear communication — so technology makes your work better, not just faster."
+          />
         </div>
       </section>
 
       <section className="band band--paper">
         <div className="wrap">
-          <div className="eyebrow">What we believe</div>
-          <h2 className="section-title">Four things we will not compromise on.</h2>
+          <SectionHead
+            no="02"
+            label="What we believe"
+            title="Four things we will not compromise on."
+            lead="Open any one to see what it means in practice."
+          />
 
-          <div className="pair">
-            {beliefs.map((belief) => (
-              <div key={belief.title}>
-                <h3>{belief.title}</h3>
-                <p>{belief.text}</p>
-              </div>
+          <div className="acc">
+            {beliefs.map((belief, i) => (
+              <details key={belief.title} open={i === 0}>
+                <summary>
+                  <span className="ix">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="h">{belief.title}</span>
+                </summary>
+                <div className="body">{belief.text}</div>
+              </details>
             ))}
           </div>
         </div>
@@ -77,31 +74,12 @@ function About() {
 
       <section className="band band--surface">
         <div className="wrap">
-          <div className="eyebrow">Mission &amp; vision</div>
-          <div className="grid grid--2" style={{ marginTop: '46px' }}>
-            <div className="cell">
-              <span className="idx">Our mission</span>
-              <h3>
-                To make AI, research and communication skills more practical, accessible and
-                relevant.
-              </h3>
-              <p>
-                We want students and professionals to feel more confident navigating an
-                increasingly digital and AI-driven world.
-              </p>
-            </div>
-            <div className="cell">
-              <span className="idx">Our vision</span>
-              <h3>
-                A future where people do not simply use technology — they understand how to
-                use it well.
-              </h3>
-              <p>
-                AI should support human thinking, not replace it. That belief shapes every
-                course and every workshop we build.
-              </p>
-            </div>
-          </div>
+          <SectionHead
+            no="03"
+            label="Mission and vision"
+            title="Technology should make people sharper, not lazier."
+            lead="Our mission is to make AI, research and communication skills practical and accessible. Our vision is a future where people do not simply use technology — they understand how to use it well."
+          />
         </div>
       </section>
 

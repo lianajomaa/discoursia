@@ -212,8 +212,6 @@ body::before {
 .hero h1 em { font-style: italic; color: #8FADDC; }
 .hero .eyebrow { color: #8FADDC; }
 .hero .eyebrow::before { background: #8FADDC; }
-.hero .rotator li { color: rgba(255, 255, 255, 0.86); }
-.hero .tick i { background: rgba(255, 255, 255, 0.2); }
 .hero .proof { color: rgba(255, 255, 255, 0.7); }
 .hero p.lede {
   margin-top: 34px; max-width: 50ch; font-size: clamp(1.1rem, 1.8vw, 1.35rem);
@@ -297,42 +295,35 @@ body::before {
   .hero-split h1 { font-size: clamp(2.8rem, 4.5vw, 4.2rem); max-width: 18ch; }
 }
 
-/* rotating outcome lines */
-.rotator {
-  margin-top: 32px; height: 3.2em; position: relative; overflow: hidden;
-  border-left: 1px solid var(--accent); padding-left: 24px; max-width: 44ch;
+/* ---------- rotator: auto, but a visitor can take it over ---------- */
+.rot { margin-top: 26px; max-width: 46ch; }
+.rot-view {
+  position: relative; height: 3em; overflow: hidden; cursor: grab;
+  border-left: 1px solid var(--accent); padding-left: 22px;
+  touch-action: pan-y; /* let the page scroll vertically, we take horizontal */
 }
-.rotator li {
+.rot-view:active { cursor: grabbing; }
+.rot-view li {
   list-style: none; position: absolute; inset: 0; display: flex; align-items: center;
-  font-size: clamp(1.06rem, 1.5vw, 1.26rem); color: var(--text);
-  font-weight: 400; line-height: 1.5; opacity: 0;
-  animation: rot 16s var(--ease) infinite;
+  font-size: clamp(1.02rem, 1.4vw, 1.2rem); line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88); pointer-events: none;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
 }
-.rotator li:nth-child(1) { animation-delay: 0s; }
-.rotator li:nth-child(2) { animation-delay: 4s; }
-.rotator li:nth-child(3) { animation-delay: 8s; }
-.rotator li:nth-child(4) { animation-delay: 12s; }
-@keyframes rot {
-  0%        { opacity: 0; transform: translateY(16px); }
-  3%        { opacity: 1; transform: none; }
-  22%       { opacity: 1; transform: none; }
-  25%       { opacity: 0; transform: translateY(-16px); }
-  100%      { opacity: 0; transform: translateY(-16px); }
+.rot-view li.on  { opacity: 1; transform: none; }
+.rot-view li.out { opacity: 0; transform: translateY(-14px); }
+
+.rot-bars { margin-top: 16px; display: flex; gap: 6px; }
+.rot-bars button {
+  width: 30px; height: 3px; padding: 0; border: 0; border-radius: 2px;
+  background: rgba(255, 255, 255, 0.22); cursor: pointer;
+  position: relative; overflow: hidden;
 }
-.tick { margin-top: 22px; display: flex; gap: 7px; }
-.tick i { width: 30px; height: 2px; background: var(--line); position: relative; overflow: hidden; }
-.tick i::after {
-  content: ""; position: absolute; inset: 0; background: var(--accent);
-  transform: scaleX(0); transform-origin: left; animation: tickfill 16s linear infinite;
-}
-.tick i:nth-child(1)::after { animation-delay: 0s; }
-.tick i:nth-child(2)::after { animation-delay: 4s; }
-.tick i:nth-child(3)::after { animation-delay: 8s; }
-.tick i:nth-child(4)::after { animation-delay: 12s; }
-@keyframes tickfill {
-  0% { transform: scaleX(0); } 25% { transform: scaleX(1); }
-  25.1%, 100% { transform: scaleX(0); }
-}
+.rot-bars button i { position: absolute; inset: 0; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+.rot-bars button.on i { animation: rotFill 4s linear forwards; }
+.rot-bars button.done i { transform: scaleX(1); }
+@keyframes rotFill { to { transform: scaleX(1); } }
+.rot-hint { margin-top: 10px; font-size: 11.5px; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.45); }
 
 /* proof, sitting next to the claim it supports */
 .proof {
@@ -370,14 +361,30 @@ body::before {
   font-family: var(--display); font-size: 13px; color: var(--muted);
   animation: lite 8s var(--ease) infinite;
 }
-.wf-step:nth-child(1) .wf-dot { animation-delay: 0s; }
-.wf-step:nth-child(2) .wf-dot { animation-delay: 2s; }
-.wf-step:nth-child(3) .wf-dot { animation-delay: 4s; }
-.wf-step:nth-child(4) .wf-dot { animation-delay: 6s; }
-@keyframes lite {
-  0%, 3%    { border-color: var(--accent); color: #fff; background: var(--accent); }
-  28%, 100% { border-color: var(--line); color: var(--muted); background: var(--surface); }
-}
+/* Each step shares one 13s cycle but has its own keyframes, so they reveal in
+   order (01, then 02, 03, 04), all four rest together, then it repeats. Shared
+   keyframes with staggered delays would drift out of sync. */
+@keyframes lite { 0%, 100% { border-color: var(--line); color: var(--muted); background: var(--surface); } }
+.wf-step .wf-dot { animation: none; }
+.wf-step:nth-child(1) .wf-dot { animation: dot1 13s var(--ease) infinite; }
+.wf-step:nth-child(2) .wf-dot { animation: dot2 13s var(--ease) infinite; }
+.wf-step:nth-child(3) .wf-dot { animation: dot3 13s var(--ease) infinite; }
+.wf-step:nth-child(4) .wf-dot { animation: dot4 13s var(--ease) infinite; }
+@keyframes dot1 { 0%,1%{border-color:var(--line);background:var(--surface);color:var(--muted)} 4%,11%{border-color:var(--accent);background:var(--accent);color:#fff} 15%,100%{border-color:var(--accent);background:var(--surface);color:var(--accent)} }
+@keyframes dot2 { 0%,12%{border-color:var(--line);background:var(--surface);color:var(--muted)} 15%,22%{border-color:var(--accent);background:var(--accent);color:#fff} 26%,100%{border-color:var(--accent);background:var(--surface);color:var(--accent)} }
+@keyframes dot3 { 0%,23%{border-color:var(--line);background:var(--surface);color:var(--muted)} 26%,33%{border-color:var(--accent);background:var(--accent);color:#fff} 37%,100%{border-color:var(--accent);background:var(--surface);color:var(--accent)} }
+@keyframes dot4 { 0%,34%{border-color:var(--line);background:var(--surface);color:var(--muted)} 37%,44%{border-color:var(--accent);background:var(--accent);color:#fff} 48%,100%{border-color:var(--accent);background:var(--surface);color:var(--accent)} }
+
+/* the label and caption of each step arrive with its dot */
+.wf-step .wf-tx { opacity: 0; transform: translateY(6px); }
+.wf-step:nth-child(1) .wf-tx { animation: tx1 13s var(--ease) infinite; }
+.wf-step:nth-child(2) .wf-tx { animation: tx2 13s var(--ease) infinite; }
+.wf-step:nth-child(3) .wf-tx { animation: tx3 13s var(--ease) infinite; }
+.wf-step:nth-child(4) .wf-tx { animation: tx4 13s var(--ease) infinite; }
+@keyframes tx1 { 0%,2%{opacity:0;transform:translateY(6px)} 7%,90%{opacity:1;transform:none} 97%,100%{opacity:0;transform:translateY(-4px)} }
+@keyframes tx2 { 0%,13%{opacity:0;transform:translateY(6px)} 18%,90%{opacity:1;transform:none} 97%,100%{opacity:0;transform:translateY(-4px)} }
+@keyframes tx3 { 0%,24%{opacity:0;transform:translateY(6px)} 29%,90%{opacity:1;transform:none} 97%,100%{opacity:0;transform:translateY(-4px)} }
+@keyframes tx4 { 0%,35%{opacity:0;transform:translateY(6px)} 40%,90%{opacity:1;transform:none} 97%,100%{opacity:0;transform:translateY(-4px)} }
 .wf-step h4 { margin-top: 11px; font-size: 13px; font-weight: 500; font-family: var(--body); }
 .wf-step p { margin-top: 4px; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
 .wf-line {
@@ -389,13 +396,14 @@ body::before {
   content: ""; position: absolute; inset: 0; background: var(--accent);
   transform: scaleX(0); transform-origin: left; animation: draw 8s var(--ease) infinite;
 }
-.wf-step:nth-child(1) .wf-line::after { animation-delay: 0.4s; }
-.wf-step:nth-child(2) .wf-line::after { animation-delay: 2.4s; }
-.wf-step:nth-child(3) .wf-line::after { animation-delay: 4.4s; }
-@keyframes draw {
-  0% { transform: scaleX(0); } 14% { transform: scaleX(1); }
-  92%, 100% { transform: scaleX(1); }
-}
+.wf-line::after { animation: none; }
+.wf-step:nth-child(1) .wf-line::after { animation: ln1 13s var(--ease) infinite; }
+.wf-step:nth-child(2) .wf-line::after { animation: ln2 13s var(--ease) infinite; }
+.wf-step:nth-child(3) .wf-line::after { animation: ln3 13s var(--ease) infinite; }
+@keyframes draw { 0%, 100% { transform: scaleX(0); } }
+@keyframes ln1 { 0%,4%{transform:scaleX(0)} 13%,100%{transform:scaleX(1)} }
+@keyframes ln2 { 0%,15%{transform:scaleX(0)} 24%,100%{transform:scaleX(1)} }
+@keyframes ln3 { 0%,26%{transform:scaleX(0)} 35%,100%{transform:scaleX(1)} }
 .wf-dot { position: relative; z-index: 1; }
 .wf-out {
   margin-top: 26px; border-top: 1px solid var(--line); padding-top: 20px;
@@ -471,6 +479,103 @@ h2.section-title {
 }
 .section-sub { margin-top: 20px; max-width: 50ch; font-size: 1.12rem; color: var(--muted); font-weight: 400; }
 
+/* ---------- section head ----------
+   A rule across the measure, a number, a label. Sections stop feeling dropped
+   onto the page and start reading as parts of one document. Used on every
+   page so the whole site shares one structure. */
+.sec { border-top: 1px solid var(--line); padding-top: 16px; }
+.band--navy .sec, .closing .sec { border-top-color: rgba(255, 255, 255, 0.18); }
+.sec-meta { display: flex; align-items: baseline; gap: 18px; }
+.sec-meta .no { font-family: var(--display); font-size: 12.5px; letter-spacing: 0.1em; color: var(--accent); }
+.sec-meta .lb {
+  font-size: 10.5px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+}
+.band--navy .sec-meta .no { color: #8FADDC; }
+.band--navy .sec-meta .lb { color: rgba(255, 255, 255, 0.56); }
+
+.sec-body {
+  margin-top: clamp(22px, 3vw, 38px);
+  display: grid; gap: 18px clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1fr); align-items: start;
+}
+@media (min-width: 900px) { .sec-body { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); } }
+.sec-body h2.title {
+  font-size: clamp(1.85rem, 3.4vw, 2.9rem); line-height: 1.1;
+  letter-spacing: -0.02em; max-width: 17ch;
+}
+.band--navy .sec-body h2.title { color: #fff; }
+
+.lead { font-size: 1.02rem; color: var(--muted); line-height: 1.62; max-width: 46ch; }
+.lead + .lead { margin-top: 9px; }
+.band--navy .lead { color: rgba(255, 255, 255, 0.74); }
+.lead-link {
+  margin-top: 16px; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600; color: var(--accent);
+  transition: gap 0.3s var(--ease);
+}
+.lead-link:hover { gap: 12px; }
+
+/* ---------- accordion ----------
+   For anything that was a title with a paragraph under it. Four stacked
+   paragraph boxes become four rows, and the section is a third the height. */
+.acc { margin-top: 32px; border-top: 1px solid var(--line); }
+.band--navy .acc { border-top-color: rgba(255, 255, 255, 0.16); }
+.acc details { border-bottom: 1px solid var(--line); }
+.band--navy .acc details { border-bottom-color: rgba(255, 255, 255, 0.16); }
+.acc summary {
+  list-style: none; cursor: pointer; padding: 19px 44px 19px 0; position: relative;
+  display: flex; align-items: baseline; gap: 16px; transition: color 0.3s var(--ease);
+}
+.acc summary::-webkit-details-marker { display: none; }
+.acc summary:hover { color: var(--accent); }
+.band--navy .acc summary:hover { color: #8FADDC; }
+.acc summary .ix { font-family: var(--display); font-size: 12px; letter-spacing: 0.1em; color: var(--accent); flex: none; }
+.band--navy .acc summary .ix { color: #8FADDC; }
+.acc summary .h { font-size: 1.12rem; font-weight: 600; }
+/* the + is two 1px rules; the vertical one rotates away on open */
+.acc summary::after {
+  content: ""; position: absolute; right: 4px; top: 50%;
+  width: 13px; height: 1px; background: currentColor; opacity: 0.55;
+}
+.acc summary::before {
+  content: ""; position: absolute; right: 10px; top: 50%;
+  width: 1px; height: 13px; background: currentColor; opacity: 0.55;
+  transform: translateY(-50%); transition: transform 0.35s var(--ease), opacity 0.3s var(--ease);
+}
+.acc details[open] summary::before { transform: translateY(-50%) rotate(90deg); opacity: 0; }
+.acc .body {
+  padding: 0 44px 20px 30px; font-size: 15.5px; line-height: 1.65;
+  color: var(--muted); max-width: 70ch;
+}
+.band--navy .acc .body { color: rgba(255, 255, 255, 0.72); }
+.acc details[open] .body { animation: accOpen 0.4s var(--ease) both; }
+@keyframes accOpen { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+
+/* ---------- condensed package strip, for pages that are not /packages ---- */
+.pk {
+  display: grid; gap: 1px; background: var(--line); margin-top: 32px;
+  border: 1px solid var(--line); grid-template-columns: 1fr 1fr;
+}
+@media (min-width: 860px) { .pk { grid-template-columns: repeat(4, 1fr); } }
+.pk a { background: var(--surface); padding: 24px 20px 22px; display: block; position: relative; transition: background 0.35s var(--ease); }
+.pk a:hover { background: var(--paper); }
+.pk a.best { background: var(--navy-deep); color: #fff; padding-top: 38px; }
+.pk a.best:hover { background: var(--navy); }
+.pk .n { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.pk a.best .n { color: #8FADDC; }
+.pk .v { margin-top: 10px; font-family: var(--display); font-size: 2rem; line-height: 1; }
+.pk .v small { font-family: var(--body); font-size: 0.8rem; color: var(--muted); margin-left: 4px; }
+.pk a.best .v small { color: rgba(255, 255, 255, 0.6); }
+.pk .d { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.pk a.best .d { color: rgba(255, 255, 255, 0.68); }
+.pk .flag {
+  position: absolute; top: 0; left: 0; right: 0; background: var(--accent); color: #fff;
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; text-align: center; padding: 4px 0;
+}
+.pk-foot { margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.pk-foot p { font-size: 14px; color: var(--muted); }
+
 /* ---------- lists of things ---------- */
 .grid { display: grid; gap: 1px; background: var(--line); margin-top: 56px; border-block: 1px solid var(--line); }
 .grid--2 { grid-template-columns: 1fr; }
@@ -496,6 +601,13 @@ h2.section-title {
 .cell h3 { font-size: 1.5rem; line-height: 1.28; }
 .cell p { margin-top: 13px; font-size: 16px; line-height: 1.68; color: var(--muted); font-weight: 400; }
 .cell .ico { color: var(--accent); margin-bottom: 18px; display: block; }
+
+/* cells sitting on the navy band invert */
+.grid--onnavy { background: rgba(255, 255, 255, 0.14); border-block-color: rgba(255, 255, 255, 0.14); }
+.grid--onnavy .cell { background: var(--navy-deep); padding: 24px 22px 26px; }
+.grid--onnavy .cell:hover { background: var(--navy); }
+.grid--onnavy .cell h3 { font-family: var(--body); font-size: 1rem; font-weight: 600; color: #fff; }
+.grid--onnavy .cell p { margin-top: 6px; font-size: 13.5px; color: rgba(255, 255, 255, 0.66); }
 
 /* ---------- audience cards ---------- */
 .aud { display: grid; gap: 24px; margin-top: 56px; grid-template-columns: 1fr; }
@@ -764,8 +876,9 @@ h2.section-title {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .rotator { height: auto; }
-  .rotator li { position: relative; opacity: 1; }
-  .rotator li:not(:first-child) { display: none; }
-  .tick { display: none; }
+  .wf-step .wf-tx { opacity: 1; transform: none; }
+  .wf-line::after { transform: scaleX(1); }
+  .rot-view { height: auto; }
+  .rot-view li { position: relative; opacity: 1; transform: none; }
+  .rot-view li:not(.on) { display: none; }
 }

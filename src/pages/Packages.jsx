@@ -8,6 +8,7 @@
 import { Link } from 'react-router-dom'
 import { plans, institutions } from '../data/plans'
 import PageHead from '../components/academy/PageHead'
+import SectionHead from '../components/academy/SectionHead'
 
 function Packages() {
   return (
@@ -20,7 +21,14 @@ function Packages() {
 
       <section className="band band--surface">
         <div className="wrap">
-          <div className="plans" style={{ marginTop: '12px' }}>
+          <SectionHead
+            no="01"
+            label="The packages"
+            title="Four ways in."
+            lead="Every paid package includes the certificate. No trial that quietly becomes a subscription."
+          />
+
+          <div className="plans">
             {plans.map((plan) => (
               <div
                 className={`plan ${plan.highlighted ? 'plan--featured' : ''}`}
@@ -85,8 +93,12 @@ function Packages() {
       {/* questions people actually ask before paying */}
       <section className="band band--paper">
         <div className="wrap">
-          <div className="eyebrow">Before you choose</div>
-          <h2 className="section-title">Good to know.</h2>
+          <SectionHead
+            no="02"
+            label="Before you choose"
+            title="Good to know."
+            lead="The three questions people ask most before paying."
+          />
 
           <div className="grid grid--3">
             <div className="cell">

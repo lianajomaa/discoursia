@@ -11,6 +11,7 @@
 // lucide dropped brand icons, so LinkedIn uses the generic external-link mark
 import { Mail, ExternalLink } from 'lucide-react'
 import PageHead from '../components/academy/PageHead'
+import SectionHead from '../components/academy/SectionHead'
 
 const EMAIL = 'janamsaab15@gmail.com'
 
@@ -20,13 +21,17 @@ function Contact() {
       <PageHead
         eyebrow="Contact"
         title="Get in touch."
-        lead="Questions about a course, enrolling, or a package for your university or organisation? Send us a message and we will come back to you."
+        lead="Questions about a course, enrolling, or a package for your university or organisation — both of these reach a person."
       />
 
       <section className="band band--surface">
         <div className="wrap">
-          <div className="eyebrow">How to reach us</div>
-          <h2 className="section-title">Two ways, both go to a person.</h2>
+          <SectionHead
+            no="01"
+            label="How to reach us"
+            title="Two ways. Both answered."
+            lead="We reply to everything, usually within a working day."
+          />
 
           <div className="rows">
             <a href={`mailto:${EMAIL}`}>

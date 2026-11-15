@@ -16,6 +16,7 @@ import { Check } from 'lucide-react'
 import { getCoursesByAudience, getPath } from '../data/courses'
 import CourseCard from '../components/academy/CourseCard'
 import PageHead from '../components/academy/PageHead'
+import SectionHead from '../components/academy/SectionHead'
 import markWhite from '../assets/mark-white.png'
 
 function PathPage({ audience }) {
@@ -42,7 +43,12 @@ function PathPage({ audience }) {
       {/* ---------------- FEATURED COURSE ---------------- */}
       <section className="band band--paper">
         <div className="wrap">
-          <div className="eyebrow">Featured course</div>
+          <SectionHead
+            no="01"
+            label="Featured course"
+            title="Start here."
+            lead="The core course for this path, with everything it covers listed in full."
+          />
 
           {featured ? (
             <div className="feature">
@@ -89,8 +95,7 @@ function PathPage({ audience }) {
       {others.length > 0 && (
         <section className="band band--surface">
           <div className="wrap">
-            <div className="eyebrow">More courses</div>
-            <h2 className="section-title">Keep going.</h2>
+            <SectionHead no="02" label="More courses" title="Keep going." />
             <div className="courses">
               {others.map((course) => (
                 <CourseCard key={course.slug} course={course} />
