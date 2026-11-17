@@ -68,7 +68,7 @@ export const plans = [
     cta: 'Choose Pro',
     // Draws the eye to the middle option — move or remove as you prefer.
     highlighted: true,
-    badge: 'Most popular',
+    badge: 'Best value',
   },
   {
     id: 'premium-student',

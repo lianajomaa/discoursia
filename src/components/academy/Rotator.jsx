@@ -1,12 +1,11 @@
 /**
  * ROTATOR — the outcome lines under the hero headline.
  *
- * Plays on its own, but a visitor can take over: drag left or right, or tap a
- * bar. The moment they do, auto-play stops for good — nothing is more
- * irritating than a carousel that yanks itself forward while you are reading.
+ * It never stops. A visitor can swipe it or tap a bar, and it simply carries
+ * on from wherever they put it. Hovering holds the current line while it is
+ * being read; moving away restarts its timer.
  *
- * Pointer events cover mouse, touch and pen in one code path, so there is no
- * separate touch handling to keep in sync.
+ * Pointer events cover mouse, touch and pen in one code path.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -16,28 +15,27 @@ const SWIPE = 40 // px before a drag counts as a swipe
 
 function Rotator({ lines }) {
   const [index, setIndex] = useState(0)
-  const [auto, setAuto] = useState(true)
   const [paused, setPaused] = useState(false)
+  // bumping `run` restarts the timer and the bar fill, even on the same line
+  const [run, setRun] = useState(0)
   const startX = useRef(null)
   const viewRef = useRef(null)
 
   const go = useCallback(
-    (next) => setIndex((next + lines.length) % lines.length),
+    (next) => {
+      setIndex((next + lines.length) % lines.length)
+      setRun((n) => n + 1)
+    },
     [lines.length],
   )
 
   useEffect(() => {
-    if (!auto || paused) return undefined
+    if (paused) return undefined
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined
 
     const id = setTimeout(() => go(index + 1), INTERVAL)
     return () => clearTimeout(id)
-  }, [auto, paused, index, go])
-
-  function takeOver(next) {
-    setAuto(false)
-    go(next)
-  }
+  }, [paused, index, run, go])
 
   function onPointerDown(event) {
     startX.current = event.clientX
@@ -48,19 +46,26 @@ function Rotator({ lines }) {
     if (startX.current === null) return
     const dx = event.clientX - startX.current
     startX.current = null
-    if (Math.abs(dx) > SWIPE) takeOver(index + (dx < 0 ? 1 : -1))
+    if (Math.abs(dx) > SWIPE) go(index + (dx < 0 ? 1 : -1))
   }
 
   return (
-    <div className="rot">
+    <div
+      className={paused ? 'rot paused' : 'rot'}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => {
+        setPaused(false)
+        setRun((n) => n + 1)
+      }}
+    >
       <ul
         className="rot-view"
         ref={viewRef}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
-        onPointerCancel={() => { startX.current = null }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        onPointerCancel={() => {
+          startX.current = null
+        }}
       >
         {lines.map((line, i) => (
           <li
@@ -76,18 +81,18 @@ function Rotator({ lines }) {
       <div className="rot-bars">
         {lines.map((line, i) => (
           <button
-            key={line}
+            // the key changes with `run`, which remounts the active bar and
+            // restarts its fill animation from zero
+            key={i === index ? `${line}-${run}` : line}
             type="button"
             aria-label={`Show line ${i + 1}`}
-            className={i === index ? (auto && !paused ? 'on' : 'done') : i < index ? 'done' : undefined}
-            onClick={() => takeOver(i)}
+            className={i === index ? 'on' : i < index ? 'done' : undefined}
+            onClick={() => go(i)}
           >
             <i />
           </button>
         ))}
       </div>
-
-      <p className="rot-hint">Swipe, or tap a bar</p>
     </div>
   )
 }

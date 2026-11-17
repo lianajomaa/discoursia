@@ -1,21 +1,45 @@
 /**
  * PACKAGES  —  /packages
  *
- * The subscription packages on their own page, as a visitor comparing prices
- * expects. The same block also appears as a section on the homepage.
+ * The full comparison. The home and course pages show the same cards in
+ * their compact form; this page lists everything each one includes.
  */
 
 import { Link } from 'react-router-dom'
+import { ArrowUpRight, Award, Building2, ShieldCheck } from 'lucide-react'
 import { plans, institutions } from '../data/plans'
 import PageHead from '../components/academy/PageHead'
+import Reveal from '../components/academy/Reveal'
 import SectionHead from '../components/academy/SectionHead'
+import Tier from '../components/academy/Tier'
+
+const notes = [
+  {
+    icon: ShieldCheck,
+    title: 'Start free, upgrade later',
+    text: 'The free package gives you selected lessons and previews, so you can see how a course works before paying for anything.',
+    to: '/checkout/free',
+  },
+  {
+    icon: Award,
+    title: 'Certificates',
+    text: 'Paid packages include a Certificate of Completion once you finish all lessons and pass the final assessment.',
+    to: '/courses',
+  },
+  {
+    icon: Building2,
+    title: 'Teams and universities',
+    text: 'Organisations are quoted rather than charged per seat. Tell us your team size and what you need.',
+    to: '/contact',
+  },
+]
 
 function Packages() {
   return (
     <>
       <PageHead
         eyebrow="Packages"
-        title="Choose your package."
+        title={<>Choose your <em>package</em>.</>}
         lead="Start free, or unlock full access to every course, worksheet and certificate."
       />
 
@@ -24,104 +48,57 @@ function Packages() {
           <SectionHead
             no="01"
             label="The packages"
-            title="Four ways in."
+            title={<>Four ways <em>in</em>.</>}
             lead="Every paid package includes the certificate. No trial that quietly becomes a subscription."
           />
 
-          <div className="plans">
-            {plans.map((plan) => (
-              <div
-                className={`plan ${plan.highlighted ? 'plan--featured' : ''}`}
-                key={plan.id}
-              >
-                <span className="name">{plan.name}</span>
-
-                <div className="price">
-                  {plan.price === 0 ? 'Free' : plan.price}
-                  {plan.price !== 0 && <small>KWD</small>}
-                </div>
-
-                {plan.tagline && (
-                  <p
-                    style={{
-                      marginTop: '12px',
-                      fontSize: '14.5px',
-                      color: 'var(--muted)',
-                      fontWeight: 300,
-                    }}
-                  >
-                    {plan.tagline}
-                  </p>
-                )}
-
-                <div className="rule" />
-
-                <ul>
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                  {plan.notIncluded.map((feature) => (
-                    <li className="off" key={feature}>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  className={`btn ${plan.highlighted ? 'btn--solid' : 'btn--ghost'}`}
-                  to={`/checkout/${plan.id}`}
-                >
-                  {plan.cta}
-                  {plan.highlighted && <span className="arw">&rarr;</span>}
-                </Link>
-              </div>
+          <div className="tiers">
+            {plans.map((plan, i) => (
+              <Tier key={plan.id} plan={plan} delay={i * 90} />
             ))}
           </div>
 
-          <div className="b2b">
-            <div>
-              <h3>{institutions.title}</h3>
-              <p>{institutions.description}</p>
+          <Reveal>
+            <div className="b2b" style={{ marginTop: '44px' }}>
+              <div>
+                <h3>{institutions.title}</h3>
+                <p>{institutions.description}</p>
+              </div>
+              <Link className="btn btn--solid" to="/contact">
+                {institutions.cta}<span className="arw">&rarr;</span>
+              </Link>
             </div>
-            <Link className="btn btn--solid" to="/contact">
-              {institutions.cta}<span className="arw">&rarr;</span>
-            </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* questions people actually ask before paying */}
+      {/* the questions people actually ask before paying */}
       <section className="band band--paper">
         <div className="wrap">
           <SectionHead
             no="02"
             label="Before you choose"
-            title="Good to know."
+            title={<>Good to <em>know</em>.</>}
             lead="The three questions people ask most before paying."
           />
 
-          <div className="grid grid--3">
-            <div className="cell">
-              <h3>Start free, upgrade later</h3>
-              <p>
-                The free package gives you selected lessons and previews, so you can see how
-                a course works before paying for anything.
-              </p>
-            </div>
-            <div className="cell">
-              <h3>Certificates</h3>
-              <p>
-                Paid packages include a Certificate of Completion once you finish all
-                lessons and pass the final assessment.
-              </p>
-            </div>
-            <div className="cell">
-              <h3>Teams and universities</h3>
-              <p>
-                Organisations are quoted rather than charged per seat. Tell us your team
-                size and what you need.
-              </p>
-            </div>
+          <div className="pillars">
+            {notes.map((note, i) => (
+              <Reveal key={note.title} delay={i * 90} className="fill">
+                <Link to={note.to} className="xcard pillar">
+                  <div className="top">
+                    <span className="ic">
+                      <note.icon size={21} aria-hidden="true" />
+                    </span>
+                    <span className="orb" aria-hidden="true">
+                      <ArrowUpRight size={16} />
+                    </span>
+                  </div>
+                  <h3>{note.title}</h3>
+                  <p>{note.text}</p>
+                </Link>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

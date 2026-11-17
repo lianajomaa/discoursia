@@ -1,23 +1,30 @@
 /**
  * HOMEPAGE  —  /
  *
- * A glimpse of the whole business in seven numbered sections. Every section
- * opens on a rule with a number and a label, so the page reads as one
- * document rather than a stack of blocks.
+ * A short landing page: a glimpse of each part of the business, and a way
+ * through to the page that holds the rest. Courses and the full "inside every
+ * course" list live on their own pages now, not here.
  *
  * Rules this page follows:
+ *   · the banner is short — the first section is visible without scrolling
  *   · one idea per section, said once
- *   · anything that was a title with a paragraph under it is an accordion
- *   · packages are a condensed strip here; the full cards live on /packages
- *   · navy lands three times — top, middle, close
+ *   · everything that looks clickable is, and goes to its own page
+ *   · navy appears at the top and at the close, and inside one panel
  */
 
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { courses, getCourseStats } from '../data/courses'
-import { plans, institutions } from '../data/plans'
+import {
+  ArrowRight, ArrowUpRight, Briefcase, Building2, Check, Globe,
+  GraduationCap, MessagesSquare, Scale, Search, Sparkles,
+} from 'lucide-react'
+import { plans } from '../data/plans'
 import markWhite from '../assets/mark-white.png'
+import Explorer from '../components/academy/Explorer'
+import Reveal from '../components/academy/Reveal'
 import Rotator from '../components/academy/Rotator'
 import SectionHead from '../components/academy/SectionHead'
+import Tier from '../components/academy/Tier'
 
 const outcomes = [
   'Write a research question you can actually answer.',
@@ -33,31 +40,53 @@ const steps = [
   { n: '04', title: 'Apply', short: 'Real scenarios' },
 ]
 
+const pillars = [
+  { icon: Search, title: 'Research', text: 'Ask better questions, and judge what you find.' },
+  { icon: Scale, title: 'Judgement', text: 'Know when to trust a tool — and when not to.' },
+  { icon: MessagesSquare, title: 'Communication', text: 'Say it clearly, to people and to machines.' },
+]
+
 const disciplines = [
   {
+    icon: Sparkles,
     title: 'AI & Prompt Engineering',
     text: 'Write effective prompts, structure conversations with AI, and refine outputs — so you get usable work back instead of generic text.',
+    to: '/courses/prompt-engineering',
+    cta: 'See the course',
   },
   {
+    icon: Search,
     title: 'Research Skills',
     text: 'Go from an idea to a well-structured project: research questions, literature search, source evaluation and methodology.',
+    to: '/courses/academic-research-writing',
+    cta: 'See the course',
   },
   {
+    icon: MessagesSquare,
     title: 'Communication',
     text: 'Strengthen how you write, present, collaborate and communicate in academic and professional settings.',
+    to: '/professionals',
+    cta: 'For professionals',
   },
   {
+    icon: Globe,
     title: 'Digital Communication',
     text: 'Understand how language, tone and platform shape a message in an AI-driven digital world.',
+    to: '/about',
+    cta: 'Our approach',
   },
   {
+    icon: Building2,
     title: 'Corporate training',
-    text: 'Workshops built around real workplace needs — AI at work, prompt engineering, ethical AI and professional communication. Delivered for teams and institutions.',
+    text: 'Workshops built around real workplace needs — AI at work, prompt engineering, ethical AI and professional communication, for teams and institutions.',
+    to: '/contact',
+    cta: 'Talk to us',
   },
 ]
 
 const audiences = [
   {
+    icon: GraduationCap,
     tag: 'University students',
     title: 'Feel confident in your own work.',
     text: 'Research assignments, presentations, AI tools and academic projects — skills you can use this semester.',
@@ -65,6 +94,7 @@ const audiences = [
     cta: 'Explore student learning',
   },
   {
+    icon: Briefcase,
     tag: 'Professionals',
     title: 'Stay ahead at work.',
     text: 'Better workplace communication, sharper AI use, stronger research and digital skills.',
@@ -73,90 +103,46 @@ const audiences = [
   },
 ]
 
-const included = [
-  { title: 'Short video lessons', text: 'Focused, so a course gets finished.' },
-  { title: 'Knowledge checks', text: 'Quizzes that lock in the concepts.' },
-  { title: 'Practical exercises', text: 'Apply it, don’t just watch it.' },
-  { title: 'Downloadable resources', text: 'Worksheets, templates, materials.' },
-  { title: 'Real-world scenarios', text: 'Situations from study and work.' },
-  { title: 'Certificate', text: 'Awarded when you finish.' },
-]
-
 const ticker = [
   'Prompt engineering', 'Research questions', 'Source evaluation', 'AI at work',
   'Academic writing', 'Presentation skills', 'Literature search',
   'Workplace communication', 'Responsible AI',
 ]
 
-// one line each, so the condensed strip stays a strip
-const blurbs = {
-  free: 'Selected lessons and course previews.',
-  'basic-student': 'One full course, with certificate.',
-  'pro-student': 'Both paths, all modules, every certificate.',
-  'premium-student': 'Everything, plus new courses as released.',
-}
-
 function Home() {
   return (
     <>
       {/* ---------------- HERO ---------------- */}
       <section className="hero">
-        <img className="watermark" src={markWhite} alt="" aria-hidden="true" />
-        <div className="wrap hero-split">
-          <div>
-            <div className="eyebrow rise d1">AI · Research · Digital communication</div>
+        <div className="glow" aria-hidden="true" />
+        <div className="wrap">
+          <div className="kicker rise d1">AI · Research · Digital communication</div>
 
-            <h1 className="rise d2">
-              Learn smarter. <em>Communicate better.</em> Work with AI.
-            </h1>
+          {/* three spans: one line on a desktop, one sentence per line on a phone */}
+          <h1>
+            <span>Learn smarter.</span>{' '}
+            <span>
+              <em>Communicate better.</em>
+            </span>{' '}
+            <span>Work with AI.</span>
+          </h1>
 
-            <div className="rise d3">
-              <Rotator lines={outcomes} />
-            </div>
+          <p className="tagline rise d3">From research to real insights</p>
+          <p className="tagsub rise d3">
+            Discoursia.ai bridges the gap between research and business.
+          </p>
 
-            <div className="actions rise d4">
-              <Link className="btn btn--light" to="/courses">
-                Explore courses<span className="arw">&rarr;</span>
-              </Link>
-              <Link className="btn btn--outline-light" to="/packages">
-                See packages
-              </Link>
-            </div>
-
-            <div className="proof rise d4">
-              <span>Self-paced</span>
-              <span>Start any time</span>
-              <span>Certificate included</span>
-            </div>
+          <div className="rise d4">
+            <Rotator lines={outcomes} />
           </div>
 
-          <div className="frame rise d4">
-            <div className="frame-bar">
-              <i /><i /><i />
-              <span>How every course works</span>
-            </div>
-            <div className="wf">
-              <div className="wf-row">
-                {steps.map((step) => (
-                  <div className="wf-step" key={step.n}>
-                    <div className="wf-line" />
-                    <div className="wf-dot">{step.n}</div>
-                    <div className="wf-tx">
-                      <h4>{step.title}</h4>
-                      <p>{step.short}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="wf-out">
-                <span className="seal">&#10003;</span>
-                <span>
-                  <span className="t">Certificate of Completion</span>
-                  <br />
-                  <span className="s">Issued once all four are done</span>
-                </span>
-              </div>
-            </div>
+          <div className="actions rise d4">
+            <Link className="btn btn--light" to="/courses">
+              Explore courses<span className="arw">&rarr;</span>
+            </Link>
+            <Link className="btn btn--outline-light" to="/packages">
+              See packages
+            </Link>
           </div>
         </div>
       </section>
@@ -170,184 +156,181 @@ function Home() {
         </div>
       </div>
 
+      {/* ---------------- HOW EVERY COURSE WORKS ---------------- */}
+      <Link className="how" to="/courses" aria-label="How every course works — see the courses">
+        <div className="wrap">
+          <div className="how-lb">How every course works</div>
+          <div className="how-steps">
+            {/* kept flat (a Fragment, no wrapper): the reveal order is driven by
+                each node's position among its siblings */}
+            {steps.map((step, i) => (
+              <Fragment key={step.n}>
+                <div className="hs">
+                  <span className="dot">{step.n}</span>
+                  <div className="tx">
+                    <h4>{step.title}</h4>
+                    <p>{step.short}</p>
+                  </div>
+                </div>
+                <span className={`hl l${i + 1}`} aria-hidden="true" />
+              </Fragment>
+            ))}
+            <div className="hs hs--cert">
+              <span className="dot">
+                <Check size={15} aria-hidden="true" />
+              </span>
+              <div className="tx">
+                <h4>Certificate of Completion</h4>
+                <p>Once all four are done</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+
       {/* ---------------- 01 THE IDEA ---------------- */}
-      <section className="band band--surface">
+      <section className="band band--paper">
         <div className="wrap">
           <SectionHead
             no="01"
             label="The idea"
-            title="Most people were never taught how to use AI well."
+            to="/about"
+            go="About us"
+            title={<>Most people were never taught how to use AI <em>well</em>.</>}
             lead="We teach the skills underneath it — research, judgement and clear communication — so technology makes your work better, not just faster."
-          >
-            <Link className="lead-link" to="/about">
-              More about us<span className="arw">&rarr;</span>
-            </Link>
-          </SectionHead>
+          />
+
+          <div className="pillars">
+            {pillars.map((pillar, i) => (
+              <Reveal key={pillar.title} delay={i * 90} className="fill">
+                <Link to="/about" className="xcard pillar">
+                  <div className="top">
+                    <span className="ic">
+                      <pillar.icon size={21} aria-hidden="true" />
+                    </span>
+                    <span className="orb" aria-hidden="true">
+                      <ArrowUpRight size={16} />
+                    </span>
+                  </div>
+                  <h3>{pillar.title}</h3>
+                  <p>{pillar.text}</p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ---------------- 02 DISCIPLINES ---------------- */}
-      <section className="band band--paper">
+      <section className="band band--surface">
         <div className="wrap">
           <SectionHead
             no="02"
             label="Disciplines"
-            title="Four disciplines, one way of thinking."
-            lead="Open any one to see what it covers."
+            to="/courses"
+            go="All courses"
+            title={<>Four disciplines, <em>one</em> way of thinking.</>}
+            lead="See what each one covers, then go straight to it."
           />
 
-          <div className="acc">
-            {disciplines.map((item, i) => (
-              <details key={item.title} open={i === 0}>
-                <summary>
-                  <span className="ix">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="h">{item.title}</span>
-                </summary>
-                <div className="body">{item.text}</div>
-              </details>
-            ))}
-          </div>
+          <Reveal>
+            <Explorer items={disciplines} />
+          </Reveal>
         </div>
       </section>
 
       {/* ---------------- 03 WHO IT IS FOR ---------------- */}
-      <section className="band band--surface">
+      <section className="band band--paper">
         <div className="wrap">
           <SectionHead
             no="03"
             label="Who it is for"
-            title="Built for where you are now."
+            title={<>Built for where you are <em>now</em>.</>}
             lead="Two paths. Same standard of teaching, different starting point."
           />
 
           <div className="aud">
-            {audiences.map((audience) => (
-              <Link to={audience.to} key={audience.tag}>
-                <span className="tag">{audience.tag}</span>
-                <h3>{audience.title}</h3>
-                <p>{audience.text}</p>
-                <span className="more">
-                  {audience.cta} <span className="arw">&rarr;</span>
-                </span>
-              </Link>
+            {audiences.map((audience, i) => (
+              <Reveal key={audience.tag} delay={i * 110} className="fill">
+                <Link to={audience.to}>
+                  <div className="top">
+                    <span className="tag">{audience.tag}</span>
+                    <span className="ic">
+                      <audience.icon size={21} aria-hidden="true" />
+                    </span>
+                  </div>
+                  <h3>{audience.title}</h3>
+                  <p>{audience.text}</p>
+                  <span className="more">
+                    {audience.cta}
+                    <span className="orb" aria-hidden="true">
+                      <ArrowRight size={16} />
+                    </span>
+                  </span>
+                </Link>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---------------- 04 INSIDE EVERY COURSE (navy, mid-page) ---------- */}
-      <section className="band band--navy">
-        <div className="wrap">
-          <SectionHead
-            no="04"
-            label="Inside every course"
-            title="Everything you need. Nothing you don't."
-            lead="The same six things in every course, so you always know what you are getting."
-          />
-
-          <div className="grid grid--3 grid--onnavy">
-            {included.map((item) => (
-              <div className="cell" key={item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- 05 COURSES ---------------- */}
+      {/* ---------------- 04 PACKAGES (a glimpse) ---------------- */}
       <section className="band band--surface">
         <div className="wrap">
           <SectionHead
-            no="05"
-            label="Courses"
-            title="Two courses. Both finishable in an afternoon."
-            lead="Short lessons, real exercises, a certificate at the end."
-          />
-
-          <div className="courses">
-            {courses.map((course) => {
-              const stats = getCourseStats(course)
-              return (
-                <article className="course" key={course.slug}>
-                  <span className="aud-tag">
-                    {course.audience === 'students' ? 'University students' : 'Professionals'}
-                  </span>
-                  <h3>{course.title}</h3>
-                  <p className="desc">{course.description}</p>
-
-                  <ul className="meta">
-                    <li>{course.level}</li>
-                    <li>{course.duration.replace('Approximately', 'About')}</li>
-                    <li>{stats.lessons} lessons</li>
-                    <li>Certificate</li>
-                  </ul>
-
-                  <Link className="btn btn--ghost" to={`/courses/${course.slug}`}>
-                    View course<span className="arw">&rarr;</span>
-                  </Link>
-                </article>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- 06 PACKAGES (condensed) ---------------- */}
-      <section className="band band--paper">
-        <div className="wrap">
-          <SectionHead
-            no="06"
+            no="04"
             label="Packages"
-            title="Start free. Upgrade when it is worth it."
+            to="/packages"
+            go="Compare all"
+            title={<>Start free. Upgrade when it is <em>worth it</em>.</>}
             lead="No trial that quietly becomes a subscription."
           />
 
-          <div className="pk">
-            {plans.map((plan) => (
-              <Link
-                key={plan.id}
-                to={`/checkout/${plan.id}`}
-                className={plan.highlighted ? 'best' : undefined}
-              >
-                {plan.highlighted ? <span className="flag">Most chosen</span> : null}
-                <span className="n">{plan.name.replace(' Student', '')}</span>
-                <div className="v">
-                  {plan.price}
-                  <small>KWD</small>
-                </div>
-                <p className="d">{blurbs[plan.id]}</p>
-              </Link>
+          <div className="tiers">
+            {plans.map((plan, i) => (
+              <Tier key={plan.id} plan={plan} compact delay={i * 90} />
             ))}
           </div>
 
-          <div className="pk-foot">
+          <Reveal className="tiers-foot">
             <p>Universities and organisations are priced separately.</p>
             <Link className="btn btn--solid" to="/packages">
               Compare all packages<span className="arw">&rarr;</span>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* ---------------- 07 OUR THINKING ---------------- */}
-      <section className="band band--surface">
+      {/* ---------------- 05 OUR THINKING ---------------- */}
+      <section className="band band--tint">
         <div className="wrap">
-          <SectionHead
-            no="07"
-            label="Our thinking"
-            title="We teach you how to think with the tools."
-            lead="Technology changes quickly; judgement lasts. AI should support human thinking, not replace it — and that belief shapes every course we build."
-          />
+          <Reveal className="quote">
+            <span className="mark" aria-hidden="true">&ldquo;</span>
+            <blockquote>
+              We teach you how to think <em>with</em> the tools.
+            </blockquote>
+            <p className="sub">
+              Technology changes quickly; judgement lasts. AI should support human thinking,
+              not replace it — and that belief shapes every course we build.
+            </p>
+            <Link className="link" to="/about">
+              Our thinking
+              <span className="orb" aria-hidden="true">
+                <ArrowRight size={16} />
+              </span>
+            </Link>
+          </Reveal>
         </div>
       </section>
 
       {/* ---------------- CLOSING ---------------- */}
-      <section className="band closing">
+      <section className="closing">
+        <div className="glow" aria-hidden="true" />
         <div className="wrap">
           <img src={markWhite} alt="" aria-hidden="true" />
-          <h2>Ready to learn differently?</h2>
+          <h2>
+            Ready to learn <em>differently</em>?
+          </h2>
           <p>Explore the courses and find the skills you need for your next step.</p>
           <div className="actions">
             <Link className="btn btn--light" to="/courses">

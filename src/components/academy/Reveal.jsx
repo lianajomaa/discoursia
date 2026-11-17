@@ -1,64 +1,56 @@
 /**
- * REVEAL — fades content in as it scrolls into view.
+ * REVEAL — fades a block up into place the first time it scrolls into view.
  *
- * Three safeguards, because content that stays invisible is far worse than
- * content that simply doesn't animate:
+ * The hidden state is applied by this component, not written into the page,
+ * so if the script never runs the content is simply visible. It also shows
+ * immediately when the browser has no IntersectionObserver, or the visitor
+ * has asked for reduced motion.
  *
- *   1. Nothing is hidden until JS has attached the observer, so a failed or
- *      blocked script leaves the page fully visible.
- *   2. A timeout reveals everything after a short delay regardless of
- *      scrolling — covers printing, odd viewports, and anything that renders
- *      the whole page without a scroll event.
- *   3. prefers-reduced-motion disables the movement entirely (see index.css).
+ * `delay` (ms) staggers siblings: <Reveal delay={i * 90}>.
  */
 
 import { useEffect, useRef, useState } from 'react'
 
-/** After this long, show the content whether or not it was scrolled to. */
-const FAILSAFE_MS = 1500
+// True when there is nothing to animate: reduced motion, or no observer.
+function skipMotion() {
+  return (
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ||
+    !('IntersectionObserver' in window)
+  )
+}
 
-function Reveal({ children, delay = 0, className = '' }) {
+function Reveal({ as: Tag = 'div', delay = 0, className = '', children, ...rest }) {
   const ref = useRef(null)
-  const [armed, setArmed] = useState(false)
-  const [shown, setShown] = useState(false)
+  // decided once, up front, so a visitor who cannot be animated for never
+  // gets a hidden frame first
+  const [shown, setShown] = useState(skipMotion)
 
   useEffect(() => {
     const node = ref.current
-    if (!node || typeof IntersectionObserver === 'undefined') return
-
-    setArmed(true)
+    if (!node || shown) return undefined
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setShown(true)
-          observer.disconnect() // animate once, not on every scroll past
+          observer.disconnect()
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
     )
-
     observer.observe(node)
-
-    const failsafe = window.setTimeout(() => {
-      setShown(true)
-      observer.disconnect()
-    }, FAILSAFE_MS)
-
-    return () => {
-      observer.disconnect()
-      window.clearTimeout(failsafe)
-    }
-  }, [])
+    return () => observer.disconnect()
+  }, [shown])
 
   return (
-    <div
+    <Tag
       ref={ref}
-      className={`${armed ? 'reveal' : ''} ${shown ? 'reveal-visible' : ''} ${className}`}
+      className={`rv${shown ? ' in' : ''}${className ? ` ${className}` : ''}`}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      {...rest}
     >
       {children}
-    </div>
+    </Tag>
   )
 }
 
